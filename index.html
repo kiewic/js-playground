@@ -26,15 +26,22 @@
       var block = d3.selectAll(".block");
 
       block.on("touchstart", onDown);
+      block.on("touchend", onDown);
+
       block.on("mousedown", onDown);
-      block.on("mouseup", onUp);
+      block.on("mouseup", onDown);
+
+      // fires when the user calls the context menu by right-clicking
+      block.on("contextmenu", onDown);
+
+      // fires when a mousedown and mouseup occur in the same element
+      block.on("click", onDown);
+
+      // fires when two mouse click events occur on the same element within a reasonable time
+      block.on("dblclick", onDown);
 
       function onDown () {
-        log.innerHTML += `${d3.event.type}, ctrlKey: ${d3.event.ctrlKey}, metaKey: ${d3.event.metaKey}\n`;
-      }
-
-      function onUp () {
-        log.innerHTML += `${d3.event.type}, ctrlKey: ${d3.event.ctrlKey}, metaKey: ${d3.event.metaKey}\n`;
+        log.value += `${d3.event.type}, ctrlKey: ${d3.event.ctrlKey}, metaKey: ${d3.event.metaKey}\n`;
       }
     </script>
   </body>
