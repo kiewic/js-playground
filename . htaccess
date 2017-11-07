@@ -1,1 +1,2 @@
 AddHandler x-httpd-php .html .htm
+DirectoryIndex index.html index.htm default.htm index.php
