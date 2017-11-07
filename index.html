@@ -26,8 +26,6 @@
 
       var block = d3.selectAll(".block");
 
-      block.on("keydown", onDown);
-
       block.on("touchstart", onDown);
       block.on("touchend", onDown);
 
@@ -42,6 +40,8 @@
 
       // fires when two mouse click events occur on the same element within a reasonable time
       block.on("dblclick", onDown);
+
+      d3.select("body").on("keyup", onDown);
 
       function onDown () {
         log.value += `${d3.event.type}, ctrlKey: ${d3.event.ctrlKey}, metaKey: ${d3.event.metaKey}\n`;
