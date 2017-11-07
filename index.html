@@ -1,5 +1,6 @@
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <style>
       svg {
         background-color: #c1f75d;
@@ -39,6 +40,8 @@
 
       // fires when two mouse click events occur on the same element within a reasonable time
       block.on("dblclick", onDown);
+
+      d3.select("body").on("keyup", onDown);
 
       function onDown () {
         log.value += `${d3.event.type}, ctrlKey: ${d3.event.ctrlKey}, metaKey: ${d3.event.metaKey}\n`;
