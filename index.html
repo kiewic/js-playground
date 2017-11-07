@@ -26,6 +26,8 @@
 
       var block = d3.selectAll(".block");
 
+      block.on("keydown", onDown);
+
       block.on("touchstart", onDown);
       block.on("touchend", onDown);
 
