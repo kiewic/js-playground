@@ -42,6 +42,7 @@
       block.on("dblclick", onDown);
 
       d3.select("body").on("keyup", onDown);
+      d3.select("body").on("keydown", onDown);
 
       function onDown () {
         log.value += `${d3.event.type}, ctrlKey: ${d3.event.ctrlKey}, metaKey: ${d3.event.metaKey}\n`;
