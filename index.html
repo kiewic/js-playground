@@ -1,52 +1,13 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <style>
-      svg {
-        background-color: #c1f75d;
-      }
-      textarea {
-        width: 100%;
-        min-height: 50%;
-      }
-    </style>
   </head>
   <body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.8/d3.js"></script>
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="300px" height="200px">
-      <rect class="block" x="50" y="50" fill="#ff6347" width="100" height="100"/>
-      <rect class="block" x="150" y="50" fill="#a8eaff" width="100" height="100"/>
-    </svg>
-    <div>
-        <textarea id="log"></textarea>
-    </div>
-    <script>
-      var d = document;
-      var log = document.getElementById("log");
-
-      var block = d3.selectAll(".block");
-
-      block.on("touchstart", onDown);
-      block.on("touchend", onDown);
-
-      block.on("mousedown", onDown);
-      block.on("mouseup", onDown);
-
-      // fires when the user calls the context menu by right-clicking
-      block.on("contextmenu", onDown);
-
-      // fires when a mousedown and mouseup occur in the same element
-      block.on("click", onDown);
-
-      // fires when two mouse click events occur on the same element within a reasonable time
-      block.on("dblclick", onDown);
-
-      d3.select("body").on("keyup", onDown);
-      d3.select("body").on("keydown", onDown);
-
-      function onDown () {
-        log.value += `${d3.event.type}, ctrlKey: ${d3.event.ctrlKey}, metaKey: ${d3.event.metaKey}\n`;
-      }
-    </script>
+    <h1>JS Playground</h1>
+    <ol>
+      <li><a href="d3js-mouse-events.html">D3.js Mouse Events</a></li>
+      <li><a href="d3js-enter-and-exit.html">D3.js Enter and Exit</a></li>
+      <li><a href="mouse-and-pointer-events.html">Mouse, touch, pen and pointer events</a></li>
+    </ol>
   </body>
 </html>
