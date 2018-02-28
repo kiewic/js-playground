@@ -1,0 +1,234 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <style>
+      .container {
+        display: grid;
+        grid-template-columns: 150px 150px 150px;
+        grid-template-rows: 150px 150px 150px 150px;
+        grid-column-gap: 15px;
+        grid-row-gap: 15px;
+      }
+      #testAreaItem {
+        display: table;
+        background-color: #FF4136;
+        color: white;
+        float: left; /* this is for Chrome 53 where grid is not supported */
+      }
+      .testAreaSubitem {
+        display: table-cell;
+        vertical-align: middle;
+      }
+      .item, button {
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: center;
+        font-weight: bold;
+        color: #555555;
+        min-height: 150px;
+        height: 100%;
+        max-width: 150px;
+        width: 100%;
+        float: left; /* this is for Chrome 53 where grid is not supported */
+      }
+      .item {
+        display: table;
+      }
+      .subitem {
+        background-color:#DDDDDD;
+        border: 10px solid #AAAAAA;
+        display: table-cell;
+        vertical-align: middle;
+      }
+      .selected {
+        background-color:#01FF70;
+        border-color: #3D9970;
+      }
+      table, th, td {
+        border: 1px solid lightgray;
+      }
+      table {
+        clear: both;
+        border-collapse: collapse;
+      }
+      td {
+        padding: 5px;
+        text-align: center;
+      }
+    </style>
+    <title>Mouse and Pointer Events<</title>
+  </head>
+  <body>
+    <h1>Mouse and Pointer Events</h1>
+    <div class="container">
+        <div id="testAreaItem" class="item">
+          <span class="testAreaSubitem">click, touch or point here</span>
+        </div>
+        <button style="grid-row-start: 1; grid-column-start: 2">Clear</button>
+    </div>
+    <script>
+      "use strict";
+      var testArea = document.getElementById('testAreaItem');
+      var container = document.getElementsByClassName('container')[0];
+
+      var events = [
+        { name: 'mousedown', row: 2, col: 1 },
+        { name: 'mouseup', row: 2, col: 2 },
+        { name: 'click', row: 2, col: 3 },
+        { name: 'touchstart', row: 3, col: 1 },
+        { name: 'touchend', row: 3, col: 2 },
+        { name: 'pointerdown', row: 4, col: 2 },
+        { name: 'pointerup', row: 4, col: 2 },
+      ];
+
+      for (var i = 0, len = events.length; i < len; i++) {
+        var event = events[i];
+        container.insertAdjacentHTML('beforeend', '<div style="grid-row-start: ' + event.row + '" grid-column-start: ' + event.col + '; class="item"><span class="subitem ' + event.name + '">' + event.name + '</span></div>');
+
+        testArea.addEventListener(event.name, function(ev) {
+          console.log(ev.type);
+          document.getElementsByClassName(ev.type)[0].classList.add('selected');
+        });
+      }
+
+      var button = document.getElementsByTagName('button')[0];
+      button.addEventListener('click', function() {
+        var elements = Array.prototype.slice.call(document.getElementsByClassName('selected'), 0);
+        for (var i = 0, len = elements.length; i < len; i++) {
+          elements[i].classList.remove('selected');
+        }
+      });
+    </script>
+    <section>
+      <h1>Summary</h1>
+      <table>
+        <tr>
+          <td></td>
+          <td colspan="4">Mouse</td>
+          <td colspan="4">Touch</td>
+          <td colspan="4">Pen</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>C53</td>
+            <td>C64</td>
+            <td>Edge</td>
+            <td>IE</td>
+            <td>C53</td>
+            <td>C64</td>
+            <td>Edge</td>
+            <td>IE</td>
+            <td>C53</td>
+            <td>C64</td>
+            <td>Edge</td>
+            <td>IE</td>
+        </tr>
+        <tr>
+          <td>mousedown</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+        </tr>
+        <tr>
+          <td>mouseup</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+        </tr>
+        <tr>
+          <td>touchstart</td>
+          <td>&#x274C;</td>
+          <td>&#x274C;</td>
+          <td>&#x274C;</td>
+          <td>&#x274C;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x274C;</td>
+          <td>&#x274C;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x274C;</td>
+          <td>&#x274C;</td>
+        </tr>
+        <tr>
+          <td>touchend</td>
+          <td>&#x274C;</td>
+          <td>&#x274C;</td>
+          <td>&#x274C;</td>
+          <td>&#x274C;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x274C;</td>
+          <td>&#x274C;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x274C;</td>
+          <td>&#x274C;</td>
+        </tr>
+        <tr>
+          <td>pointerdown</td>
+          <td>&#x274C;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x274C;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x274C;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+        </tr>
+        <tr>
+          <td>pointerup</td>
+          <td>&#x274C;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x274C;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x274C;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+          <td>&#x2714;</td>
+        </tr>
+      </table>
+    </section>
+  </body>
+</html>
