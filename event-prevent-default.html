@@ -1,0 +1,40 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>preventDefault() vs stopPropagation()</title>
+    <style>
+        input {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            min-width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>preventDefault() vs stopPropagation()</h1>
+    <div>
+        <input id="text1" type="text" placeholder="this text box has stopPropagation()" />
+    </div>
+    <div>
+        <input id="text2" type="text" placeholder="this text box has preventDefault()" />
+    </div>
+    <script>
+        var element1 = document.getElementById('text1');
+        element1.addEventListener('keydown', function(event) {
+            if (event.keyCode === 27) {
+                element1.value = '';
+                event.stopPropagation(); // stops the event from bubbling up
+            }
+        });
+
+        var element2 = document.getElementById('text2');
+        element2.addEventListener('keydown', function(event) {
+            if (event.keyCode === 27) {
+                element2.value = '';
+                event.preventDefault(); // prevents the default action the browser makes
+            }
+        });
+    </script>
+</body>
+</html>
