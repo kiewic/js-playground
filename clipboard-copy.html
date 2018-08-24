@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Copy text, HTML and images to the clipboard</title>
+</head>
+
+<body>
+  <p><img id="myImage" src="http://kiewic.com/assets/images/power-bi-waffle-chart.png" height="100" /></p>
+  <p><a id="textLink" href="#">Copy text and HTML</a></p>
+  <p><a id="imageLink" href="#">Copy image</a></p>
+  <script>
+    // Works in Chrome.
+    // Does not work in IE.
+    // Works in Edge.
+    // Read more: https://developer.mozilla.org/en-US/docs/Web/Events/copy
+    function copyText(e) {
+      function listener(e) {
+        // The ClipboardEvent.clipboardData property holds a DataTransfer object.
+        // Read more: https://developer.mozilla.org/en-US/docs/Web/API/ClipboardEvent/clipboardData
+        console.log(e.clipboardData);
+
+        e.clipboardData.setData('text/plain', navigator.userAgent);
+        e.clipboardData.setData('text/html', '<h1>Hello <b>World!</b></h1><p>Today is ' + new Date().toString() + '.</p>');
+        // clipboardData.setData('application/json', { name: 'Gilberto', age: 31 });
+        // clipboardData.setData('text/power-bi', 'foo foo foo');
+
+        // Do not copy data from selection.
+        e.preventDefault();
+
+        document.removeEventListener('copy', listener);
+      }
+      document.addEventListener('copy', listener);
+      document.execCommand('copy');
+
+      // Stop the link acting as a link and adding # to the end of the URL.
+      e.preventDefault();
+    }
+
+    function copyImage(e) {
+      var img = document.querySelectorAll('#myImage')[0]
+
+      var range = document.createRange();
+      range.setStartBefore(img);
+      range.setEndAfter(img);
+      range.selectNode(img);
+
+      var sel = window.getSelection();
+      sel.addRange(range);
+
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
+
+      // Stop the link acting as a link and adding # to the end of the URL.
+      e.preventDefault();
+    }
+
+    document.querySelectorAll('#textLink')[0].addEventListener('click', copyText);
+    document.querySelectorAll('#imageLink')[0].addEventListener('click', copyImage);
+  </script>
+</body>
+
+</html>
