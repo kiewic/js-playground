@@ -12,7 +12,7 @@
     </style>
   </head>
   <body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.8/d3.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
     <h1>D3.js Mouse Events</h1>
     <p>
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="300px" height="200px">
@@ -23,10 +23,14 @@
     <p>
         <textarea id="log"></textarea>
     </p>
+    <p>
+      <button id="clearButton">Clear</button>
+    </p>
     <script>
       var d = document;
       var log = document.getElementById("log");
 
+      // select both "block" elements
       var block = d3.selectAll(".block");
 
       block.on("touchstart", onDown);
@@ -50,6 +54,10 @@
       function onDown () {
         log.value += `${d3.event.type}, ctrlKey: ${d3.event.ctrlKey}, metaKey: ${d3.event.metaKey}\n`;
       }
+
+      document.getElementById("clearButton").addEventListener("click", function () {
+          log.value = "";
+      });
     </script>
     <summary>
       <h2>Summary</h2>
