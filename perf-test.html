@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Performance test</title>
+</head>
+<body>
+  <p><a id="test1" href="#">Run Test 1</a></p>
+  <p><a id="testConsoleTimeStamp" href="#">Run console timeStamp</a></p>
+  <script>
+    function test1(e) {
+      console.time('test1');
+      var foo = [];
+      for (var i = 1; i <= 1000; i++) {
+        test2(foo, i);
+      }
+      console.timeEnd('test1');
+    }
+  
+    function test2(foo, i) {
+      for (var j = 1; j <= 100000; j++) {
+        if (i * j % 211 === 0) {
+          test3(foo);
+        }
+        else {
+          foo.push(i * i - i);
+        }
+      }
+    }
+  
+    var k = 0;
+    function test3(foo) {
+      if (k++ % 1733 === 0) {
+        console.count('test3');
+        test4();
+      }
+      foo = [];
+    }
+
+    function test4() {
+      var chars = document.documentElement.innerHTML.split('');
+      var word = [];
+      var text = [];
+      for (var c of chars) {
+        var current = charCode(c);
+        if ((current >= charCode('a') && current <= charCode('z')) || (current >= charCode('A') && current <= charCode('Z')) || (current >= charCode('0') && current <= charCode('9')) || current === charCode('-')) {
+          word.push(c);
+        }
+        else if (word.length > 0) {
+          text.push(word.join(''));
+          word.length = 0;
+        }
+      }
+      if (word.length > 0) {
+          text.push(word.join(''));
+      }
+      console.log(text.join(' ').length);
+    }
+
+    function charCode(a) {
+      return a.charCodeAt(0);
+    }
+
+    function testTimeStamp(foo) {
+      console.timeStamp('Hello world!');
+    }
+
+    document.getElementById('test1').addEventListener('click', test1);
+    document.getElementById('testConsoleTimeStamp').addEventListener('click', testTimeStamp);
+  </script>
+</body>
+</html>
