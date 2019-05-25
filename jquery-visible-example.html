@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>jQuery visible selector vs jquery-visible</title>
+        <script
+            src="https://code.jquery.com/jquery-1.12.4.js"
+            integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="
+            crossorigin="anonymous"></script>
+        <script src="jquery-visible.js"></script>
+        <style>
+            .test {
+                font-family: 'Courier New', Courier, monospace;
+                color:blue
+            }
+            .test span {
+                color:coral;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <p class="test">is(":visible") <span id="visibleSelector"></span></p>
+        <p class="test">visible() <span id="visibleValue"></span></p>
+        <p class="test">visible(true) <span id="visibleTrueValue"></span></p>
+        <p class="test">visible(false, false, "horizontal") <span id="visibleHorizontalValue"></span></p>
+        <p class="test">visible(false, false, "vertical") <span id="visibleVerticalValue"></span></p>
+        <p><a id="hideShowButton" href="#">hide/show</a></p>
+        <div class="moveable" style="width: 200px; height: 200px; background-color: aquamarine"></div>
+        <script>
+            $(document).ready(function(){
+                var $dragging = null;
+
+                $(document.body).on("mousemove", function (e) {
+                    if ($dragging) {
+                        $dragging.offset({
+                            top: e.pageY - 100,
+                            left: e.pageX - 100
+                        });
+                    }
+                });
+
+                $(document.body).on("mousedown", "div", function (e) {
+                    $dragging = $(e.target);
+                });
+
+                $(document.body).on("mouseleave", "div", function (e) {
+                    $dragging = null;
+                });
+
+                $(document.body).on("mouseup", function (e) {
+                    $dragging = null;
+                });
+
+                $("#hideShowButton").on("click", function (e) {
+                    var targetDiv = $(document.body).find("div");
+                    if (targetDiv.is(":visible")) {
+                        targetDiv.css("display", "none");
+                    }
+                    else {
+                        targetDiv.css("display", "block");
+                    }
+                });
+
+                setInterval(function () {
+                    $("#visibleSelector").html(String($(".moveable").is(":visible")));
+                    $("#visibleValue").html(String($(".moveable").visible()));
+                    $("#visibleTrueValue").html(String($(".moveable").visible(true)));
+                    $("#visibleHorizontalValue").html(String($(".moveable").visible(false, false, "horizontal")));
+                    $("#visibleVerticalValue").html(String($(".moveable").visible(false, false, "vertical")));
+                }, 500);
+            });
+        </script>
+    </body>
+</html>
