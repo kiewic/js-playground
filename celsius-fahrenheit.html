@@ -94,9 +94,10 @@
                 .call(d3.axisLeft(y))
                 .call(g => g.select(".domain").remove())
                 .call(g => g.select(".tick:last-of-type text").clone()
-                    .attr("x", 3)
-                    .attr("text-anchor", "start")
+                    .attr("x", 0)
+                    .attr("text-anchor", "end")
                     .attr("font-weight", "bold")
+                    .attr("transform", `translate(-${margin.left/2} ${height/2}) rotate(-90)`)
                     .text(data.y));
 
             function chart() {
@@ -113,7 +114,7 @@
                 svg.append("g")
                     .call(yAxis);
 
-                    svg.append("path")
+                svg.append("path")
                     .datum(data)
                     .attr("fill", "none")
                     .attr("stroke", "steelblue")
