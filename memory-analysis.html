@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>DevTools memory analysis: heap snapshots</title>
+</head>
+
+<body>
+  <p>Open DevTools, go to Memory tab, and press Take heap snapshot.</p>
+  <ol>
+    <li>The largest array has a "Retained Size" of 55,580 bytes.
+      <ol>
+        <li>It has 1000 elements, but when I scroll to the bottom of its elements, it says "Show all 903" elements,
+          which would imply this number does not include the already displayed values, so, there were 97 elements
+          displayed by default.</li>
+        <li>Each element must be using about 58 bytes.</li>
+      </ol>
+    </li>
+    <li>Nested arrays have a length of 1 or 10, and . That is 10 bytes per element. Their "Retained Size" values are:
+      <ol>
+        <li>140 for 1 object</li>
+        <li>68 for ten null or undefined values</li>
+        <li>16 for ten true or false values</li>
+        <li>16 for ten short strings</li>
+        <li>16 for ten long strings</li>
+      </ol>
+    </li>
+    <li>I guess this means we cannot garbage collect true values, false values and strings.</li>
+    <li>A 101 characters long string has a "Shallow Size" and "Retained Size" of 116.</li>
+    <li>A 12 characters long string has a "Shallow Size" and "Retained Size" of 24.</li>
+    <li>Nested object with one single element have a "Retained Size" of 84 bytes. My guess is 44 from system / Odball and 40 from something inside system / Map.</li>
+    <li>bar has a "Retained Size" of 308.</li>
+    <li>baz and buz have "Retained Size" of 104, somehow, referencing a shared object makes them lose 204 bytes compared to bar.</li>
+  </ol>
+  <script>
+    function foo() {
+      window.myArray1 = [];
+      for (let i = 0; i < 1000; i++) {
+        switch (i % 5) {
+          case 0:
+            window.myArray1.push([
+              'This is a very long string ... The quick brown fox jumps over the lazy dog, it has 101 characters ...',
+              'This is a very long string ... The quick brown fox jumps over the lazy dog, it has 101 characters ...',
+              'This is a very long string ... The quick brown fox jumps over the lazy dog, it has 101 characters ...',
+              'This is a very long string ... The quick brown fox jumps over the lazy dog, it has 101 characters ...',
+              'This is a very long string ... The quick brown fox jumps over the lazy dog, it has 101 characters ...',
+              'This is a very long string ... The quick brown fox jumps over the lazy dog, it has 101 characters ...',
+              'This is a very long string ... The quick brown fox jumps over the lazy dog, it has 101 characters ...',
+              'This is a very long string ... The quick brown fox jumps over the lazy dog, it has 101 characters ...',
+              'This is a very long string ... The quick brown fox jumps over the lazy dog, it has 101 characters ...',
+              'This is a very long string ... The quick brown fox jumps over the lazy dog, it has 101 characters ...',
+            ]);
+            break;
+          case 1:
+            window.myArray1.push([
+              'Hello world!',
+              'Hello world!',
+              'Hello world!',
+              'Hello world!',
+              'Hello world!',
+              'Hello world!',
+              'Hello world!',
+              'Goodbye world!',
+              'Hello world!',
+              'Goodbye world!',
+            ]);
+            break;
+          case 2:
+            window.myArray1.push([{
+              a: 25,
+              b: 24,
+              c: 23,
+              d: 22,
+              e: 21,
+              f: 20,
+              g: 19,
+              h: 18,
+              i: 17,
+              j: 16,
+              k: 15,
+              l: 14,
+              m: 13,
+              n: 12,
+              o: 11,
+              p: 10,
+              q: 9,
+              r: 8,
+              s: 7,
+              t: 6,
+              u: 5,
+              v: 4,
+              x: 3,
+              y: 2,
+              z: 1,
+            }]);
+            break;
+          case 3:
+            window.myArray1.push([
+              true,
+              false,
+              true,
+              false,
+              true,
+              false,
+              true,
+              false,
+              true,
+              false,
+            ]);
+            break;
+          default:
+            window.myArray1.push([
+              null,
+              undefined,
+              null,
+              undefined,
+              null,
+              undefined,
+              null,
+              undefined,
+              null,
+              undefined,
+            ]);
+            break;
+        }
+
+      }
+
+      window.myArray2 = [];
+      window.myArray2.push([
+        'Welcome to the world!',
+        'Welcome to the world!',
+        'Welcome to the world!',
+        'Welcome to the world!',
+        'Welcome to the world!',
+        'Welcome to the world!',
+        'Welcome to the world!',
+        'Welcome to the world!',
+        'Welcome to the world!',
+        'Welcome to the world!',
+      ]);
+
+      window.bar = {
+        a: { b: true },
+        c: { d: false },
+      };
+
+      window.baz = {
+        e: { f: true },
+        g: { h: false },
+      };
+
+      window.buz = {
+        i: { j: true },
+        k: window.baz.g,
+      };
+    }
+
+    foo();
+  </script>
+</body>
+
+</html>
