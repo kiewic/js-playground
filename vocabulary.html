@@ -23,8 +23,8 @@
       justify-content: center; */
       line-height: 100vh;
       background-color: #292929;
-      margin-bottom: 2px;
-      font-size: 12vw;
+      /* margin-bottom: 2px; */
+      font-size: 14vw;
       font-weight: bold;
       color: #a93fd3;
     }
@@ -33,7 +33,7 @@
 
 <body>
   <ul>
-    <li><h1>Route</h1></li>
+    <li>Route</li>
     <li>Determine</li>
     <li>Determined</li>
     <li>Undermine</li>
@@ -72,6 +72,24 @@
     <li>Abide</li>
     <li>Chandelier</li>
   </ul>
+  <script>
+    const colorPairs = [
+      ['#292929', '#a93fd3'],
+      ['#4bed7c', '#b80d83'],
+      ['#4f3f38', '#1296d1'],
+      ['#6c0079', '#499650'],
+      ['#36553b', '#e773be'],
+      ['#2c2c2c', '#2d74d2'],
+      ['#af2c18', '#52dbed'],
+    ];
+    const listItems = document.querySelectorAll('li');
+    let i = 0;
+    for (const listItem of listItems) {
+      listItem.style.backgroundColor = colorPairs[i % colorPairs.length][0];
+      listItem.style.color = colorPairs[i % colorPairs.length][1];
+      i = i + 1;
+    }
+  </script>
 </body>
 
 </html>
