@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Cancun</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+    body, ul, li, h1 {
+      margin: 0px;
+      padding: 0px;
+    }
+    li {
+      display: block;
+      width: 100%;
+      height: 105vh; /* Add 5% more to make it easier to fit the screen when scrolling */
+      text-align: center;
+      /* vertical-align: middle; */
+      overflow: hidden;
+      /* display: flex;
+      justify-content: center; */
+      line-height: 100vh;
+      background-color: #292929;
+      /* margin-bottom: 2px; */
+      font-size: 14vw;
+      font-weight: bold;
+      color: #a93fd3;
+    }
+  </style>
+</head>
+
+<body>
+  <ul>
+    <li>Route</li>
+    <li>Determine</li>
+    <li>Determined</li>
+    <li>Undermine</li>
+    <li>Maintain</li>
+    <li title="JOOL">Jewel</li>
+    <li title="JOOL-ree">Jewelry</li>
+    <li>Variety</li>
+    <li>Occur</li>
+    <li>Occurrences</li>
+    <li>Spouse</li>
+    <li>Genre</li>
+    <li>Gender</li>
+    <li>Evenly</li>
+    <li>Capability</li>
+    <li>Awareness</li>
+    <li>Theatre</li>
+    <li>Aluminium</li>
+    <li>Drooling</li>
+    <li>Thaw</li>
+    <li>Couch</li>
+    <li>Coach</li>
+    <li>Yeast</li>
+    <li>Wheat</li>
+    <li title="THEE-ree">Theory</li>
+    <li>Vary</li>
+    <li>Annual</li>
+    <li>Negate</li>
+    <li>Apparent</li>
+    <li>Figuratively</li>
+    <li>Alternately</li>
+    <li>Perishable</li>
+    <li>Actively</li>
+    <li>Stabilize</li>
+    <li>Minor</li>
+    <li>Gorgeous</li>
+    <li>Figuratively</li>
+    <li>Abide</li>
+    <li>Chandelier</li>
+    <li title="IN-trest">Interest</li>
+    <li title="IN-trest-ing">Interesting</li>
+    <li title="IVE-ree">Ivory</li>
+    <li title="LAB-ruh-tory">Laboratory</li>
+    <li title="MIN-uh-cher">Miniature</li>
+    <li title="MIZ-ruh-bul">Miserable</li>
+    <li title="MIST-ree">Mystery</li>
+    <li title="AHP-ruh">Opera</li>
+    <li title="PRAK-tik-lee">Practically</li>
+    <li title="PREF-rence">Preference</li>
+    <li title="RES-pri=tor-ee">Respiratory</li>
+    <li title="REV-rence">Reverence</li>
+    <li title="SEP-ret">Separate</li>
+    <li title="SEP-ret-lee">Separately</li>
+    <li title="SEV-rul">Several</li>
+    <li title="SAWF-more">Sophomore</li>
+    <li title="TEMP-ruh-tcher">Temperature</li>
+    <li title="TORD">Toward</li>
+    <li title="TRAV-ling">Traveling</li>
+    <li title="VEJ-tuh-bul">Vegetable</li>
+    <li title="vet-ru-NAR-ee-un">Veterinarian</li>
+    <li title="VER-chuh-lee">Virtually</li>
+    <li title="WENS-day">Wednesday</li>
+    <li title="aks-ih-DENT-lee">Accidentally</li>
+    <li title="AK-shul-ee">Actually</li>
+    <li title="ASS-prin">Aspirin</li>
+    <li title="AV-rej">Average</li>
+    <li title="BAR-bruh">Barbara</li>
+    <li title="MAR-gret">Margaret</li>
+    <li title="BASE-ik-ly">Basically</li>
+    <li title="BEV-rej">Beverage</li>
+    <li title="BROK-lee">Broccoli</li>
+    <li title="BIZ-nuss">Business</li>
+    <li title="KAM-ruh">Camera</li>
+    <li title="KATH-lik">Catholic</li>
+    <li title="CHOK-let">Chocolate</li>
+    <li title="KOMF-ter-bul">Comfortable</li>
+    <li title="duh-LIB-rut-lee">Deliberately</li>
+    <li title="DESS-pret">Desperate</li>
+    <li title="DIE-mund">Diamond</li>
+    <li title="DIE-per">Diaper</li>
+    <li title="DIF-rence">Difference</li>
+    <li title="DIF-rent">Different</li>
+    <li title="dis-KUV-ree">Discovery</li>
+    <li title="el-uh-MEN-tree">Elementary</li>
+    <li title="EEV-ning">Evening</li>
+    <li title="EHV-ree">Every</li>
+    <li title="ex-TROT-din-ary">Extraordinary</li>
+    <li title="FAM-lee">Family</li>
+    <li title="FAV-rit">Favorite</li>
+    <li title="FED-rul">Federal</li>
+    <li title="JEN-ruhl">General</li>
+    <li title="JEN-ruh-lee">Generally</li>
+    <li>Calvary</li>
+    <li>Colonel</li>
+    <li>February</li>
+  </ul>
+  <script>
+    const colorPairs = [
+      ['#292929', '#a93fd3'],
+      ['#4bed7c', '#b80d83'],
+      ['#4f3f38', '#1296d1'],
+      // ['#6c0079', '#499650'],
+      ['#36553b', '#e773be'],
+      ['#2c2c2c', '#2d74d2'],
+      ['#af2c18', '#52dbed'],
+      ['#1c1c1c', '#9235d9'],
+      ['#b12b5e', '#4fdda4'],
+      ['#1b1b1b', '#2b54f3'],
+      ['#362ab8', '#d1d947'],
+    ];
+    const listItems = document.querySelectorAll('li');
+    let i = 0;
+    for (const listItem of listItems) {
+      listItem.style.backgroundColor = colorPairs[i % colorPairs.length][0];
+      listItem.style.color = colorPairs[i % colorPairs.length][1];
+      i = i + 1;
+    }
+  </script>
+</body>
+
+</html>
