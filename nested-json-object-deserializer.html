@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Deserialize nested JSON objects</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+    html, body, .container {
+      margin: 0px;
+    }
+    .container {
+      display: flex;
+      background-color: aquamarine;
+      width: 100%;
+      height: 100vh;
+    }
+    .container textarea {
+      flex-grow: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <textarea class="in">{
+      "a": "b",
+      "c": "{\"d\":\"e\"}",
+      "f": null,
+      "g": [{
+          "h": "{\"i\":9999}",
+          "j": "{\"k\":true}"
+      }]
+  }</textarea>
+    <textarea class="out">World</textarea>
+  </div>
+  <script>
+    let inTextarea = document.querySelector('textarea.in');
+    inTextarea.addEventListener('blur', () => {
+      outTextarea = document.querySelector('textarea.out');
+      outTextarea.value = deserializeRootObject(inTextarea.value);
+    });
+    /** This expects and returns a JSON object. */
+    function deserializeRootObject(input) {
+      let root;
+      try {
+        root = JSON.parse(input);
+      }
+      catch (error) {
+        return error;
+      }
+      return JSON.stringify(deserializeNestedJsonObjects(root));
+    }
+    function deserializeNestedJsonObjects(input) {
+      // Strings can be nested objects or just strings
+      if (typeof input === 'string') {
+        try {
+          return JSON.parse(input);
+        }
+        catch {
+          return input;
+        }
+      }
+      // Deserialize array elements
+      if (Array.isArray(input)) {
+        for (let i = 0; i < input.length; i++) {
+          input[i] = deserializeNestedJsonObjects(input[i]);
+        }
+        return input;
+      }
+      // Deserialize object properties
+      if (input && typeof input === 'object') {
+        const keys = Object.keys(input);
+        for (const key of keys) {
+          input[key] = deserializeNestedJsonObjects(input[key]);
+        }
+        return input;
+      }
+      // Do nothing to numbers, booleans, null, etc.
+      return input;
+    }
+  </script>
+</body>
+</html>
