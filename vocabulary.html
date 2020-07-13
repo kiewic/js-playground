@@ -3,19 +3,25 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Cancun</title>
+  <title>Vocabulary by Gilberto</title>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
     }
-    body, ul, li, h1 {
+
+    body,
+    ul,
+    li,
+    h1 {
       margin: 0px;
       padding: 0px;
     }
+
     li {
       display: block;
       width: 100%;
-      height: 105vh; /* Add 5% more to make it easier to fit the screen when scrolling */
+      height: 105vh;
+      /* Add 5% more to make it easier to fit the screen when scrolling */
       text-align: center;
       /* vertical-align: middle; */
       overflow: hidden;
@@ -28,12 +34,15 @@
       font-weight: bold;
       color: #a93fd3;
     }
+
     li a:visited,
     li a:link {
       color: inherit;
       text-decoration: none;
     }
-    li a:hover, li span:hover {
+
+    li a:hover,
+    li span:hover {
       filter: grayscale(100%);
     }
   </style>
@@ -41,110 +50,482 @@
 
 <body>
   <ul>
-    <li>
-      <span>Route</span>
-      <audio src="dictionary/route.mp3" preload="none">
-        <track kind="captions" label="route">
-      </audio>
-    </li>
-    <li>Determine</li>
-    <li>Determined</li>
-    <li>Undermine</li>
-    <li>Maintain</li>
-    <li title="JOOL">Jewel</li>
-    <li title="JOOL-ree">Jewelry</li>
-    <li>Variety</li>
-    <li>Occur</li>
-    <li>Occurrences</li>
-    <li>Spouse</li>
-    <li>Genre</li>
-    <li>Gender</li>
-    <li>Evenly</li>
-    <li>Capability</li>
-    <li>Awareness</li>
-    <li>Theatre</li>
-    <li>Aluminium</li>
-    <li>Drooling</li>
-    <li>Thaw</li>
-    <li>Couch</li>
-    <li>Coach</li>
-    <li>Yeast</li>
-    <li>Wheat</li>
-    <li title="THEE-ree">Theory</li>
-    <li>Vary</li>
-    <li>Annual</li>
-    <li>Negate</li>
-    <li>Apparent</li>
-    <li>Figuratively</li>
-    <li>Alternately</li>
-    <li>Perishable</li>
-    <li>Actively</li>
-    <li>Stabilize</li>
-    <li>Minor</li>
-    <li>Gorgeous</li>
-    <li>Figuratively</li>
-    <li>Abide</li>
-    <li>Chandelier</li>
-    <li title="IN-trest">Interest</li>
-    <li title="IN-trest-ing">Interesting</li>
-    <li title="IVE-ree">Ivory</li>
-    <li title="LAB-ruh-tory">Laboratory</li>
-    <li title="MIN-uh-cher">Miniature</li>
-    <li title="MIZ-ruh-bul">Miserable</li>
-    <li title="MIST-ree">Mystery</li>
-    <li title="AHP-ruh">Opera</li>
-    <li title="PRAK-tik-lee">Practically</li>
-    <li title="PREF-rence">Preference</li>
-    <li title="RES-pri=tor-ee">Respiratory</li>
-    <li title="REV-rence">Reverence</li>
-    <li title="SEP-ret">Separate</li>
-    <li title="SEP-ret-lee">Separately</li>
-    <li title="SEV-rul">Several</li>
-    <li title="SAWF-more">Sophomore</li>
-    <li title="TEMP-ruh-tcher">Temperature</li>
-    <li title="TORD">Toward</li>
-    <li title="TRAV-ling">Traveling</li>
-    <li title="VEJ-tuh-bul">Vegetable</li>
-    <li title="vet-ru-NAR-ee-un">Veterinarian</li>
-    <li title="VER-chuh-lee">Virtually</li>
-    <li title="WENS-day">Wednesday</li>
-    <li title="aks-ih-DENT-lee">Accidentally</li>
-    <li title="AK-shul-ee">Actually</li>
-    <li title="ASS-prin">Aspirin</li>
-    <li title="AV-rej">Average</li>
-    <li title="BAR-bruh">Barbara</li>
-    <li title="MAR-gret">Margaret</li>
-    <li title="BASE-ik-ly">Basically</li>
-    <li title="BEV-rej">Beverage</li>
-    <li title="BROK-lee">Broccoli</li>
-    <li title="BIZ-nuss">Business</li>
-    <li title="KAM-ruh">Camera</li>
-    <li title="KATH-lik">Catholic</li>
-    <li title="CHOK-let">Chocolate</li>
-    <li title="KOMF-ter-bul">Comfortable</li>
-    <li title="duh-LIB-rut-lee">Deliberately</li>
-    <li title="DESS-pret">Desperate</li>
-    <li title="DIE-mund">Diamond</li>
-    <li title="DIE-per">Diaper</li>
-    <li title="DIF-rence">Difference</li>
-    <li title="DIF-rent">Different</li>
-    <li title="dis-KUV-ree">Discovery</li>
-    <li title="el-uh-MEN-tree">Elementary</li>
-    <li title="EEV-ning">Evening</li>
-    <li title="EHV-ree">Every</li>
-    <li title="ex-TROT-din-ary">Extraordinary</li>
-    <li title="FAM-lee">Family</li>
-    <li title="FAV-rit">Favorite</li>
-    <li title="FED-rul">Federal</li>
-    <li title="JEN-ruhl">General</li>
-    <li title="JEN-ruh-lee">Generally</li>
-    <li>Calvary</li>
-    <li>Colonel</li>
-    <li>February</li>
-    <li>Hurricane</li>
-    <li>Creaking</li>
   </ul>
   <script>
+    const words = [
+      {
+        text: 'Route',
+        audio: 'route.mp3'
+      },
+      {
+        text: 'Determine',
+        audio: 'determine.mp3'
+      },
+      {
+        text: 'Determined',
+        audio: 'determined.mp3'
+      },
+      {
+        text: 'Undermine',
+        audio: 'undermine.mp3'
+      },
+      {
+        text: 'Maintain',
+        audio: 'maintain.mp3'
+      },
+      {
+        text: 'Jewel',
+        title: 'JOOL',
+        audio: 'jewel.mp3'
+      },
+      {
+        text: 'Jewelry',
+        title: 'JOOL-ree',
+        audio: 'jewelry.mp3'
+      },
+      {
+        text: 'Variety',
+        audio: 'variety.mp3'
+      },
+      {
+        text: 'Occur',
+        audio: 'occur.mp3'
+      },
+      {
+        text: 'Occurrences',
+        audio: 'occurrences.mp3'
+      },
+      {
+        text: 'Spouse',
+        audio: 'spouse.mp3'
+      },
+      {
+        text: 'Genre',
+        audio: 'genre.mp3'
+      },
+      {
+        text: 'Gender',
+        audio: 'gender.mp3'
+      },
+      {
+        text: 'Evenly',
+        audio: 'evenly.mp3'
+      },
+      {
+        text: 'Capability',
+        audio: 'capability.mp3'
+      },
+      {
+        text: 'Awareness',
+        audio: 'awareness.mp3'
+      },
+      {
+        text: 'Theatre',
+        audio: 'theatre.mp3'
+      },
+      {
+        text: 'Aluminium',
+        audio: 'aluminium.mp3'
+      },
+      {
+        text: 'Drooling',
+        audio: 'drooling.mp3'
+      },
+      {
+        text: 'Thaw',
+        audio: 'thaw.mp3'
+      },
+      {
+        text: 'Couch',
+        audio: 'couch.mp3'
+      },
+      {
+        text: 'Coach',
+        audio: 'coach.mp3'
+      },
+      {
+        text: 'Yeast',
+        audio: 'yeast.mp3'
+      },
+      {
+        text: 'Wheat',
+        audio: 'wheat.mp3'
+      },
+      {
+        text: 'Theory',
+        title: 'THEE-ree',
+        audio: 'theory.mp3'
+      },
+      {
+        text: 'Vary',
+        audio: 'vary.mp3'
+      },
+      {
+        text: 'Annual',
+        audio: 'annual.mp3'
+      },
+      {
+        text: 'Negate',
+        audio: 'negate.mp3'
+      },
+      {
+        text: 'Apparent',
+        audio: 'apparent.mp3'
+      },
+      {
+        text: 'Alternately',
+        audio: 'alternately.mp3'
+      },
+      {
+        text: 'Perishable',
+        audio: 'perishable.mp3'
+      },
+      {
+        text: 'Actively',
+        audio: 'actively.mp3'
+      },
+      {
+        text: 'Stabilize',
+        audio: 'stabilize.mp3'
+      },
+      {
+        text: 'Minor',
+        audio: 'minor.mp3'
+      },
+      {
+        text: 'Gorgeous',
+        audio: 'gorgeous.mp3'
+      },
+      {
+        text: 'Figuratively',
+        audio: 'figuratively.mp3'
+      },
+      {
+        text: 'Abide',
+        audio: 'abide.mp3'
+      },
+      {
+        text: 'Chandelier',
+        audio: 'chandelier.mp3'
+      },
+      {
+        text: 'Interest',
+        title: 'IN-trest',
+        audio: 'interest.mp3'
+      },
+      {
+        text: 'Interesting',
+        title: 'IN-trest-ing',
+        audio: 'interesting.mp3'
+      },
+      {
+        text: 'Ivory',
+        title: 'IVE-ree',
+        audio: 'ivory.mp3'
+      },
+      {
+        text: 'Laboratory',
+        title: 'LAB-ruh-tory',
+        audio: 'laboratory.mp3'
+      },
+      {
+        text: 'Miniature',
+        title: 'MIN-uh-cher',
+        audio: 'miniature.mp3'
+      },
+      {
+        text: 'Miserable',
+        title: 'MIZ-ruh-bul',
+        audio: 'miserable.mp3'
+      },
+      {
+        text: 'Mystery',
+        title: 'MIST-ree',
+        audio: 'mystery.mp3'
+      },
+      {
+        text: 'Opera',
+        title: 'AHP-ruh',
+        audio: 'opera.mp3'
+      },
+      {
+        text: 'Practically',
+        title: 'PRAK-tik-lee',
+        audio: 'practically.mp3'
+      },
+      {
+        text: 'Preference',
+        title: 'PREF-rence',
+        audio: 'preference.mp3'
+      },
+      {
+        text: 'Respiratory',
+        title: 'RES-pri=tor-ee',
+        audio: 'respiratory.mp3'
+      },
+      {
+        text: 'Reverence',
+        title: 'REV-rence',
+        audio: 'reverence.mp3'
+      },
+      {
+        text: 'Separate',
+        title: 'SEP-ret',
+        audio: 'separate.mp3'
+      },
+      {
+        text: 'Separately',
+        title: 'SEP-ret-lee',
+        audio: 'separately.mp3'
+      },
+      {
+        text: 'Several',
+        title: 'SEV-rul',
+        audio: 'several.mp3'
+      },
+      {
+        text: 'Sophomore',
+        title: 'SAWF-more',
+        audio: 'sophomore.mp3'
+      },
+      {
+        text: 'Temperature',
+        title: 'TEMP-ruh-tcher',
+        audio: 'temperature.mp3'
+      },
+      {
+        text: 'Toward',
+        title: 'TORD',
+        audio: 'toward.mp3'
+      },
+      {
+        text: 'Traveling',
+        title: 'TRAV-ling',
+        audio: 'traveling.mp3'
+      },
+      {
+        text: 'Vegetable',
+        title: 'VEJ-tuh-bul',
+        audio: 'vegetable.mp3'
+      },
+      {
+        text: 'Veterinarian',
+        title: 'vet-ru-NAR-ee-un',
+        audio: 'veterinarian.mp3'
+      },
+      {
+        text: 'Virtually',
+        title: 'VER-chuh-lee',
+        audio: 'virtually.mp3'
+      },
+      {
+        text: 'Wednesday',
+        title: 'WENS-day',
+        audio: 'wednesday.mp3'
+      },
+      {
+        text: 'Accidentally',
+        title: 'aks-ih-DENT-lee',
+        audio: 'accidentally.mp3'
+      },
+      {
+        text: 'Actually',
+        title: 'AK-shul-ee',
+        audio: 'actually.mp3'
+      },
+      {
+        text: 'Aspirin',
+        title: 'ASS-prin',
+        audio: 'aspirin.mp3'
+      },
+      {
+        text: 'Average',
+        title: 'AV-rej',
+        audio: 'average.mp3'
+      },
+      {
+        text: 'Barbara',
+        title: 'BAR-bruh',
+      },
+      {
+        text: 'Margaret',
+        title: 'MAR-gret',
+      },
+      {
+        text: 'Basically',
+        title: 'BASE-ik-ly',
+        audio: 'basically.mp3'
+      },
+      {
+        text: 'Beverage',
+        title: 'BEV-rej',
+        audio: 'beverage.mp3'
+      },
+      {
+        text: 'Broccoli',
+        title: 'BROK-lee',
+        audio: 'broccoli.mp3'
+      },
+      {
+        text: 'Business',
+        title: 'BIZ-nuss',
+        audio: 'business.mp3'
+      },
+      {
+        text: 'Camera',
+        title: 'KAM-ruh',
+        audio: 'camera.mp3'
+      },
+      {
+        text: 'Catholic',
+        title: 'KATH-lik',
+        audio: 'catholic.mp3'
+      },
+      {
+        text: 'Chocolate',
+        title: 'CHOK-let',
+        audio: 'chocolate.mp3'
+      },
+      {
+        text: 'Comfortable',
+        title: 'KOMF-ter-bul',
+        audio: 'comfortable.mp3'
+      },
+      {
+        text: 'Deliberately',
+        title: 'duh-LIB-rut-lee',
+        audio: 'deliberately.mp3'
+      },
+      {
+        text: 'Desperate',
+        title: 'DESS-pret',
+        audio: 'desperate.mp3'
+      },
+      {
+        text: 'Diamond',
+        title: 'DIE-mund',
+        audio: 'diamond.mp3'
+      },
+      {
+        text: 'Diaper',
+        title: 'DIE-per',
+        audio: 'diaper.mp3'
+      },
+      {
+        text: 'Difference',
+        title: 'DIF-rence',
+        audio: 'difference.mp3'
+      },
+      {
+        text: 'Different',
+        title: 'DIF-rent',
+        audio: 'different.mp3'
+      },
+      {
+        text: 'Discovery',
+        title: 'dis-KUV-ree',
+        audio: 'discovery.mp3'
+      },
+      {
+        text: 'Elementary',
+        title: 'el-uh-MEN-tree',
+        audio: 'elementary.mp3'
+      },
+      {
+        text: 'Evening',
+        title: 'EEV-ning',
+        audio: 'evening.mp3'
+      },
+      {
+        text: 'Every',
+        title: 'EHV-ree',
+        audio: 'every.mp3'
+      },
+      {
+        text: 'Extraordinary',
+        title: 'ex-TROT-din-ary',
+        audio: 'extraordinary.mp3'
+      },
+      {
+        text: 'Family',
+        title: 'FAM-lee',
+        audio: 'family.mp3'
+      },
+      {
+        text: 'Favorite',
+        title: 'FAV-rit',
+        audio: 'favorite.mp3'
+      },
+      {
+        text: 'Federal',
+        title: 'FED-rul',
+        audio: 'federal.mp3'
+      },
+      {
+        text: 'General',
+        title: 'JEN-ruhl',
+        audio: 'general.mp3'
+      },
+      {
+        text: 'Generally',
+        title: 'JEN-ruh-lee',
+        audio: 'generally.mp3'
+      },
+      {
+        text: 'Calvary',
+        audio: 'calvary.mp3'
+      },
+      {
+        text: 'Colonel',
+        audio: 'colonel.mp3'
+      },
+      {
+        text: 'February',
+        audio: 'february.mp3'
+      },
+      {
+        text: 'Hurricane',
+        audio: 'hurricane.mp3'
+      },
+      {
+        text: 'Creaking',
+        audio: 'creaking.mp3'
+      },
+    ];
+    const list = document.querySelector('ul');
+    for (const word of words) {
+      const url = `https://www.bing.com/search?q=define+${encodeURIComponent(word.text)}`;
+      const anchor = document.createElement('a');
+      if (word.title) {
+        anchor.setAttribute('title', word.title);
+      }
+      anchor.setAttribute('href', url);
+      anchor.appendChild(document.createTextNode(word.text));
+
+      const listItem = document.createElement('li');
+      listItem.appendChild(anchor);
+      if (word.audio) {
+          const audio = document.createElement('audio');
+          audio.setAttribute('preload', 'none');
+          audio.setAttribute('src', `dictionary/${word.audio}`);
+
+          // I am not sure what is the track for
+          const track = document.createElement('track');
+          track.setAttribute('kind', 'captions');
+          track.setAttribute('label', word.text);
+
+          audio.appendChild(track);
+          listItem.appendChild(audio);
+
+          // TODO: investigate if using a single function reduces memory consumption
+          listItem.addEventListener('click', function (event) {
+            audio.play().catch(error => alert(error));
+            event.stopPropagation();
+            event.preventDefault();
+          });
+      }
+      list.append(listItem);
+    }
     const colorPairs = [
       ['#292929', '#a93fd3'],
       ['#4bed7c', '#b80d83'],
@@ -164,17 +545,6 @@
       listItem.style.backgroundColor = colorPairs[i % colorPairs.length][0];
       listItem.style.color = colorPairs[i % colorPairs.length][1];
       i = i + 1;
-
-      const word = listItem.innerText.trim();
-      if (word === 'Route') {
-        listItem.addEventListener('click', function() {
-          document.querySelector('audio').play();
-        });
-      }
-      else {
-        const url = `https://www.bing.com/search?q=define+${encodeURIComponent(word)}`;
-        listItem.innerHTML = `<a href="${url}">${word}</a>`;
-      }
     }
   </script>
 </body>
