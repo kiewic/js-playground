@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Promises</title>
+</head>
+
+<body>
+    <button id="longPromiseChain">Start long promise chain</button>
+    <button id="shortPromiseChain">Start short promise chain</button>
+    <script>
+        document.querySelector('#longPromiseChain').addEventListener('click', () => {
+            console.log('Button clicked');
+            test().then((value) => {
+                console.log(`Value 1: ${value}`); // No onRejected callback, internally replaced with a "Thrower"
+            }).then((value) => {
+                console.log(`Value 2: ${value}`);
+            }, (reason) => {
+                console.log(`Reason 2: ${reason}`);
+            }).then((value) => {
+                console.log(`Value 3: ${value}`);
+            }, (reason) => {
+                console.log(`Reason 3: ${reason}`);
+            }).catch((reason) => {
+                console.log(`Prototype.catch: ${reason}`); // catch() behaves the same as then(undefined, onRejected)
+            }).finally(() => {
+                console.log('Prototype.finally');
+            });
+        });
+
+        document.querySelector('#shortPromiseChain').addEventListener('click', () => {
+            console.log('Button clicked');
+            test().then((value) => {
+                console.log(`Value 1: ${value}`); // No onRejected callback, internally replaced with a "Thrower"
+            }).catch((reason) => {
+                console.log(`Prototype.catch: ${reason}`); // catch() behaves the same as then(undefined, onRejected)
+            }).finally(() => {
+                console.log('Prototype.finally');
+            });
+        });
+
+        async function test() {
+            try {
+                // const result = await new Promise((resolve, reject) => resolve(10));
+                const result = await new Promise((resolve, reject) => reject('Horrible error!'));
+                console.log(`Promise result: ${result}`);
+                return result;
+            } catch (error) {
+                console.log(`Catch: ${error}`);
+                throw error;
+            }
+        }
+    </script>
+</body>
+
+</html>
