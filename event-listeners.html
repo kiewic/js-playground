@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <h2>JavaScript addEventListener()</h2>
+
+    <p>This example uses the addEventListener() method to add two click events to the same button.</p>
+
+    <div id="parent">
+        <button id="myBtn">Try it</button>
+    </div>
+
+    <script>
+        // var p = document.getElementById("parent");
+        // p.addEventListener("click", parentFunction, true);
+
+        var x = document.getElementById("myBtn");
+        x.addEventListener("click", buttonFunction1);
+        x.addEventListener("click", buttonFunction2, true);
+        x.addEventListener("click", buttonFunction3, true);
+        x.addEventListener("click", buttonFunction4);
+
+        function buttonFunction1(event) {
+            alert("Hello World 1!");
+        }
+
+        function buttonFunction2() {
+            alert("Hello World 2!");
+            event.stopPropagation();
+        }
+
+        function buttonFunction3() {
+            alert("Hello World 3!");
+        }
+
+        function buttonFunction4() {
+            alert("Hello World 4!");
+        }
+
+        function parentFunction(event) {
+            alert("This function on the parent was executed!");
+        }
+    </script>
+
+</body>
+
+</html>
