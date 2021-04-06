@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Is iPhone or iPad?</title>
+</head>
+
+<body>
+    <h1>Is iPhone or iPad?</h1>
+    <div id="result1">Loading</div>
+    <h2>Is macOS?</h2>
+    <div id="result2">Loading</div>
+    <script>
+        function isIOsOrIPadOs() {
+            let userAgent = navigator.userAgent.toLowerCase();
+            return userAgent.indexOf('iphone') > -1 ||
+                userAgent.indexOf('ipad') > -1 ||
+                (userAgent.indexOf('macintosh') > -1 && navigator.maxTouchPoints > 1);
+        }
+        document.querySelector('#result1').textContent = String(isIOsOrIPadOs());
+
+        function isMacOs() {
+            let userAgent = navigator.userAgent.toLowerCase();
+            return userAgent.indexOf('macintosh') > -1 && navigator.maxTouchPoints <= 1;
+        }
+        document.querySelector('#result2').textContent = String(isMacOs());
+    </script>
+</body>
+
+</html>
