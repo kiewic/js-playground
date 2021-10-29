@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>border-radius hello world</title>
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            display: grid;
+            place-items: center;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Make sure to use Lodash full build. The core build does not include `debounce` -->
+    <script src="./lodash.js"></script>
+    <div><input type="text" /></div>
+    <div id="output"></div>
+    <div id="debounceOutput"></div>
+    <script>
+        document.querySelector('input').addEventListener('keyup', () => {
+            let value = document.querySelector('input').value;
+            let outputDiv = document.querySelector('#output');
+            outputDiv.innerHTML = '';
+            outputDiv.appendChild(document.createTextNode(`Input changed to ${value}`));
+        });
+        document.querySelector('input').addEventListener('keyup', _.debounce(() => {
+            let value = document.querySelector('input').value;
+            let outputDiv = document.querySelector('#debounceOutput');
+            outputDiv.innerHTML = '';
+            outputDiv.appendChild(document.createTextNode(`Input changed to ${value} (debounced)`));
+        }, 3000));
+    </script>
+</body>
+
+</html>
