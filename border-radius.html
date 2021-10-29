@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>border-radius hello world</title>
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            display: grid;
+            place-items: center;
+            height: 100%;
+        }
+
+        div {
+            border-radius: 10% 50% 10% 10%;
+            background-color: tomato;
+            font-size: 50px;
+            color: white;
+            padding: 20px;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            width: 250px;
+            height: 250px;
+            animation: 2s ease-in-out 0s infinite alternate move_box,
+            1s linear 0s infinite alternate change_background_color;
+        }
+
+        @keyframes move_box {
+            from {
+                margin-left: -20%;
+                background-color: rgb(178, 76, 238);
+            }
+            to {
+                margin-left: 20%;
+                background-color: tomato;
+            }
+        }
+
+        @keyframes change_background_color {
+            from {
+            }
+            to {
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div>Free cookies on Tuesdays</div>
+</body>
+
+</html>
