@@ -1,0 +1,37 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>preventDefault() vs stopPropagation()</title>
+    <style>
+        input {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            min-width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>keydown vs keypress vs keyup</h1>
+    <div>
+        <button id="button1" type="button">Just a button to put the focus on it</button>
+    </div>
+    <div>
+        <textarea id="text2" cols="75" rows="40"></textarea>
+    </div>
+    <script>
+        let element1 = document.getElementById('button1');
+        let element2 = document.getElementById('text2');
+        element1.addEventListener('keydown', (event) => logEvent(event, 'keydown'));
+        element1.addEventListener('keypress', (event) => logEvent(event, 'keypress'));
+        element1.addEventListener('keyup', (event) => logEvent(event, 'keyup'));
+        function logEvent(event, name) {
+            if (event.code) {
+                element2.value += `${name} - ${event.isComposing}\n`;
+                event.stopPropagation(); // stops the event from bubbling up
+                event.preventDefault();
+            }
+        }
+    </script>
+</body>
+</html>
