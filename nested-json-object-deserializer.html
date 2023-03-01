@@ -38,10 +38,14 @@
   </div>
   <script>
     let inTextarea = document.querySelector('textarea.in');
-    inTextarea.addEventListener('blur', () => {
+    inTextarea.addEventListener('change', () => {
+      updateOutput();
+    });
+    updateOutput(); // Run it once after loading the page
+    function updateOutput() {
       outTextarea = document.querySelector('textarea.out');
       outTextarea.value = deserializeRootObject(inTextarea.value);
-    });
+    }
     /** This expects and returns a JSON object. */
     function deserializeRootObject(input) {
       let root;
@@ -51,7 +55,7 @@
       catch (error) {
         return error;
       }
-      return JSON.stringify(deserializeNestedJsonObjects(root));
+      return JSON.stringify(deserializeNestedJsonObjects(root), undefined, 2);
     }
     function deserializeNestedJsonObjects(input) {
       // Strings can be nested objects or just strings
@@ -82,5 +86,15 @@
       return input;
     }
   </script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-R8LZ369GWJ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-R8LZ369GWJ');
+  </script>
+  <!-- Global site tag (gtag.js) - Google Analytics - End -->
 </body>
 </html>
