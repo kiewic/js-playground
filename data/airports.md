@@ -1,8 +1,11 @@
-# Airports
+# Airports and mountains
 
 |     | Elevation |
 |-----|----------:|
+| Mount Rainier | 14,411' |
+| Mauna Kea | 13,803' |
+| MEX | 7,350' |
+| GDL | 5,016' |
 | SEA |  433' |
-| GDL | 5016' |
-| MEX | 7343' |
 
+*Elevation* above sea level.
