@@ -1,4 +1,4 @@
-window.breakOn2 = function(obj, propertyKey) {
+window.breakOn = function(obj, propertyKey) {
     let original = Object.getOwnPropertyDescriptor(obj, propertyKey);
     let localValue;
     Object.defineProperty(obj, propertyKey, {
