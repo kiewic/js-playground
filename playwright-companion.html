@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Playwright companion</title>
+    <style>
+    </style>
+</head>
+
+<body>
+    <h1>Hello World!</h1>
+    <div>To run this website, install http-server:</div>
+    <pre>npm install --global http-server</pre>
+    <div>Then start the server:</div>
+    <pre>http-server</pre>
+    <div>Finally, point your test to:</div>
+    <pre>http://127.0.0.1:8080/playwright-companion.html</pre>
+    <div id="progress-bar">Loading ...</div>
+    <button data-testid="cancel-button">Cancel</button>
+    <button data-testid="accept-button">Accept</button>
+    <script>
+        let progress = 0;
+        let intervalId = setInterval(() => {
+            if (progress < 100) {
+                document.getElementById("progress-bar").innerHTML = `Loading ${progress}%`;
+                document.querySelector('[data-testid="cancel-button"]').focus();
+                progress += 10;
+            }
+            else {
+                document.getElementById("progress-bar").innerHTML = `Done!`;
+                document.querySelector('[data-testid="accept-button"]').focus();
+                clearInterval(intervalId);
+            }
+        }, 333);
+    </script>
+</body>
+
+</html>
