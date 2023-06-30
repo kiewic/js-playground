@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>JS Playground</title>
+  <script src="./d3.v7.js"></script>
+</head>
+
+<body>
+  <script>
+    // Define the data
+    const data = [{
+        name: 'Mount Rainier',
+        elevation: 14411
+      },
+      {
+        name: 'Mauna Kea',
+        elevation: 13803
+      },
+      {
+        name: 'MEX',
+        elevation: 7350
+      },
+      {
+        name: 'GDL',
+        elevation: 5016
+      },
+      {
+        name: 'SEA',
+        elevation: 433
+      }
+    ];
+
+    // Define the dimensions of the chart
+    const width = 600;
+    const height = 400;
+    const margin = {
+      top: 20,
+      right: 20,
+      bottom: 30,
+      left: 50
+    };
+
+    // Create the SVG element
+    const svg = d3.select('body')
+      .append('svg')
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+    // Define the scales
+    const xScale = d3.scaleBand()
+      .domain(data.map(d => d.name))
+      .range([0, width])
+      .padding(0.1);
+
+    const yScale = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d.elevation)])
+      .range([height, 0]);
+
+    // Create the bars
+    svg.selectAll('.bar')
+      .data(data)
+      .enter()
+      .append('rect')
+      .attr('class', 'bar')
+      .attr('x', d => xScale(d.name))
+      .attr('y', d => yScale(d.elevation))
+      .attr('width', xScale.bandwidth())
+      .attr('height', d => height - yScale(d.elevation));
+
+    // Add the x-axis
+    svg.append('g')
+      .attr('transform', `translate(0, ${height})`)
+      .call(d3.axisBottom(xScale));
+
+    // Add the y-axis
+    svg.append('g')
+      .call(d3.axisLeft(yScale));
+
+    // Add the y-axis label
+    svg.append('text')
+      .attr('transform', 'rotate(-90)')
+      .attr('y', 0 - margin.left)
+      .attr('x', 0 - (height / 2))
+      .attr('dy', '1em')
+      .style('text-anchor', 'middle')
+      .text('Elevation (ft)');
+
+    // Add the title
+    svg.append('text')
+      .attr('x', width / 2)
+      .attr('y', 0 - margin.top / 2)
+      .attr('text-anchor', 'middle')
+      .style('font-size', '24px')
+      .text('Elevation of Various Locations');
+  </script>
+</body>
+
+</html>
