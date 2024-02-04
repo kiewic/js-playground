@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizer</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <style>
+        /* Add any additional styles here */
+        .tooltip {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px;
+            border-radius: 3px;
+            pointer-events: none;
+            display: none;
+        }
+
+        #chart-container {
+            width: 100%;
+            overflow: hidden;
+            /* Hide scrollbars */
+        }
+
+        .rect-hover:hover {
+            stroke: lightsalmon;
+            stroke-width: 1px;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tooltip"></div>
+
+    <!-- Add radio buttons for file selection -->
+    <div>
+        <input type="radio" name="dataFile" id="visualizationData3" checked>
+        <label for="visualizationData3">Saturday</label>
+        <input type="radio" name="dataFile" id="visualizationData4">
+        <label for="visualizationData4">Sunday</label>
+        <input type="radio" name="dataFile" id="DIFF">
+        <label for="DIFF">Diff</label>
+    </div>
+
+    <div id="chart-container">
+        <script>
+            function loadData() {
+                const selectedFile = document.querySelector('input[name="dataFile"]:checked').id;
+                const filename = `${selectedFile}.json`;
+
+                if (selectedFile === 'DIFF') {
+                    const filename1 = `visualizationData3.json`;
+                    const filename2 = `visualizationData4.json`;
+                    d3.json(filename2).then(data2 => {
+                        d3.json(filename1).then(data1 => {
+                            const diffData = data2.map((route, i) => {
+                                const diffDates = route.dates.map((date2, j) => {
+                                    const date1 = data1[i].dates.find(d => d.date === date2.date) || date2; // if not found, use the same object to show a diff equal to zero
+                                    const diffPrice = date2.price - date1.price;
+                                    return {
+                                        date: date2.date,
+                                        price: diffPrice
+                                    };
+                                });
+                                return {
+                                    from: route.from,
+                                    to: route.to,
+                                    dates: diffDates
+                                };
+                            });
+                            updateChart(diffData);
+                        }).catch(error => {
+                            console.error('Error loading data:', error);
+                        });
+                    }).catch(error => {
+                        console.error('Error loading data:', error);
+                    });
+                    return;
+                }
+
+                d3.json(filename).then(data => {
+                    // Update the chart with new data
+                    updateChart(data);
+                }).catch(error => {
+                    console.error('Error loading data:', error);
+                });
+            }
+
+            function updateChart(inputData) {
+                // Extract unique dates from the input and sort them
+                const uniqueDates = [...new Set(inputData.flatMap(route => route.dates.map(date => date.date)))].sort();
+
+                // Set up the dimensions of the chart
+                const cellHeight = 40; // Adjusted cell height
+                const availableWidth = window.innerWidth - 10; // Adjusted to consider a margin
+                const cellWidth = Math.floor(availableWidth / uniqueDates.length);
+                const width = uniqueDates.length * cellWidth;
+                const height = inputData.length * cellHeight;
+
+                console.log(d3.min(inputData.flatMap(route => route.dates).filter(date => date.price != null),
+                    date => date.price));
+                console.log(d3.max(inputData.flatMap(route => route.dates).filter(date => date.price != null),
+                    date => date.price));
+
+                // Update color scale domain based on new data
+                const minPrice = d3.min(inputData.flatMap(route => route.dates).filter(date => date.price != null), date => date.price);
+                const maxPrice = d3.max(inputData.flatMap(route => route.dates).filter(date => date.price != null), date => date.price);
+                const middlePrice = (maxPrice - minPrice) / 2.75;
+                const colorScale = d3.scaleLinear()
+                    .domain([
+                        minPrice,
+                        middlePrice,
+                        maxPrice
+                    ])
+                    .range(['#01FF70', '#FF851B', '#FF4136']); // Lime to Orange to Red
+
+                let svg = d3.select('#chart-container svg');
+
+                if (svg.selectAll('*').empty()) {
+                    // Create SVG container if it doesn't exist
+                    svg = d3.select('#chart-container')
+                        .append('svg')
+                        .attr('width', width)
+                        .attr('height', height)
+                        .append('g');
+                }
+                else {
+                    svg.attr('width', width);
+                }
+
+                // Update rows with new data
+                const rows = svg.selectAll('.row')
+                    .data(inputData);
+
+                // Enter new rows
+                const newRows = rows.enter().append('g')
+                    .attr('class', 'row')
+                    .attr('transform', (route, i) => `translate(0, ${i * cellHeight})`);
+
+                // Enter rectangles within each new row
+                svg.selectAll('.row').selectAll('rect')
+                    .data(route => uniqueDates.map(date => ({
+                        date,
+                        route,
+                        price: route.dates.find(d => d.date === date),
+                    })))
+                    .enter()
+                    .append('rect')
+                    .attr('class', 'rect-hover')
+                    .attr('x', (d, i) => i * cellWidth)
+                    .attr('y', 0)
+                    .attr('width', cellWidth)
+                    .attr('height', cellHeight)
+                    .attr('fill', d => d.price?.price == null ? 'white' : colorScale(d.price?.price))
+                    .on('mouseover', showTooltip)
+                    .on('mouseout', hideTooltip);
+
+                const updatedRectangles = rows.selectAll('rect')
+                    .data(route => uniqueDates.map(date => ({
+                        date,
+                        route,
+                        price: route.dates.find(d => d.date === date),
+                    })))
+                    .attr('fill', d => d.price?.price == null ? 'white' : colorScale(d.price?.price))
+                    // .attr('width', cellWidth); // Update the width based on the new cellWidth
+
+                // Remove any extra rectangles if needed
+                updatedRectangles.exit().remove();
+
+                // Remove any extra rectangles if needed
+                rows.exit().remove();
+
+                // Functions to show/hide tooltips
+                function showTooltip(data) {
+                    const tooltip = d3.select('.tooltip');
+                    const {
+                        date,
+                        route,
+                        price
+                    } = data;
+                    const mouseX = d3.event.pageX + 10;
+                    const mouseY = d3.event.pageY - 20;
+
+                    // Check if tooltip is going outside the right edge of the page
+                    const tooltipWidth = tooltip.node().offsetWidth;
+                    const rightEdge = window.innerWidth - 10; // 10 is a margin
+                    const adjustedX = mouseX + tooltipWidth > rightEdge ? mouseX - tooltipWidth - 20 : mouseX;
+
+                    tooltip.html(
+                            `Date: ${date}<br>Route: ${route.from} to ${route.to}<br>Price: ${price?.price ? price.price : ''}`
+                            )
+                        .style('left', adjustedX + 'px')
+                        .style('top', mouseY + 'px')
+                        .style('display', 'inline-block');
+                }
+
+                function hideTooltip() {
+                    d3.select('.tooltip').style('display', 'none');
+                }
+            }
+
+            // Initial data loading
+            loadData();
+
+            // Event listener for radio button change
+            document.querySelectorAll('input[name="dataFile"]').forEach(radio => {
+                radio.addEventListener('change', loadData);
+            });
+        </script>
+    </div>
+</body>
+
+</html>
