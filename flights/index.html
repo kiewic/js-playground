@@ -53,8 +53,9 @@
             function loadData() {
                 const selectedFile = document.querySelector('input[name="dataFile"]:checked').id;
                 const filename = `${selectedFile}.json`;
+                const isDiff = selectedFile === 'DIFF';
 
-                if (selectedFile === 'DIFF') {
+                if (isDiff) {
                     const filename1 = `visualizationData3.json`;
                     const filename2 = `visualizationData4.json`;
                     d3.json(filename2).then(data2 => {
@@ -74,7 +75,7 @@
                                     dates: diffDates
                                 };
                             });
-                            updateChart(diffData);
+                            updateChart(diffData, isDiff);
                         }).catch(error => {
                             console.error('Error loading data:', error);
                         });
@@ -86,13 +87,13 @@
 
                 d3.json(filename).then(data => {
                     // Update the chart with new data
-                    updateChart(data);
+                    updateChart(data, isDiff);
                 }).catch(error => {
                     console.error('Error loading data:', error);
                 });
             }
 
-            function updateChart(inputData) {
+            function updateChart(inputData, isDiff) {
                 // Extract unique dates from the input and sort them
                 const uniqueDates = [...new Set(inputData.flatMap(route => route.dates.map(date => date.date)))].sort();
 
@@ -112,13 +113,20 @@
                 const minPrice = d3.min(inputData.flatMap(route => route.dates).filter(date => date.price != null), date => date.price);
                 const maxPrice = d3.max(inputData.flatMap(route => route.dates).filter(date => date.price != null), date => date.price);
                 const middlePrice = (maxPrice - minPrice) / 2.75;
-                const colorScale = d3.scaleLinear()
+                const colorScale = !isDiff ? d3.scaleLinear()
                     .domain([
                         minPrice,
                         middlePrice,
                         maxPrice
                     ])
-                    .range(['#01FF70', '#FF851B', '#FF4136']); // Lime to Orange to Red
+                    .range(['#01FF70', '#FF851B', '#85144b']) :  // Lime to Orange to Maroon
+                    d3.scaleLinear()
+                    .domain([
+                        minPrice,
+                        0,
+                        maxPrice
+                    ])
+                    .range(['#01FF70', '#FFFFFF', '#FF4136']);
 
                 let svg = d3.select('#chart-container svg');
 
