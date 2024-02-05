@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visualizer</title>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="../d3.v7.js"></script>
     <style>
         /* Add any additional styles here */
         .tooltip {
@@ -46,6 +46,11 @@
         <label for="visualizationData4">Sunday</label>
         <input type="radio" name="dataFile" id="DIFF">
         <label for="DIFF">Diff</label>
+    </div>
+
+    <div>
+        Best: <span id="bestPrice">...</span>
+        Worst: <span id="worstPrice">...</span>
     </div>
 
     <div id="chart-container">
@@ -104,15 +109,14 @@
                 const width = uniqueDates.length * cellWidth;
                 const height = inputData.length * cellHeight;
 
-                console.log(d3.min(inputData.flatMap(route => route.dates).filter(date => date.price != null),
-                    date => date.price));
-                console.log(d3.max(inputData.flatMap(route => route.dates).filter(date => date.price != null),
-                    date => date.price));
-
                 // Update color scale domain based on new data
                 const minPrice = d3.min(inputData.flatMap(route => route.dates).filter(date => date.price != null), date => date.price);
                 const maxPrice = d3.max(inputData.flatMap(route => route.dates).filter(date => date.price != null), date => date.price);
                 const middlePrice = (maxPrice - minPrice) / 2.75;
+
+                document.querySelector('#bestPrice').textContent = minPrice;
+                document.querySelector('#worstPrice').textContent = maxPrice;
+
                 const colorScale = !isDiff ? d3.scaleLinear()
                     .domain([
                         minPrice,
@@ -185,15 +189,15 @@
                 rows.exit().remove();
 
                 // Functions to show/hide tooltips
-                function showTooltip(data) {
+                function showTooltip(event, data) {
                     const tooltip = d3.select('.tooltip');
                     const {
                         date,
                         route,
                         price
                     } = data;
-                    const mouseX = d3.event.pageX + 10;
-                    const mouseY = d3.event.pageY - 20;
+                    const mouseX = event.pageX + 10;
+                    const mouseY = event.pageY - 20;
 
                     // Check if tooltip is going outside the right edge of the page
                     const tooltipWidth = tooltip.node().offsetWidth;
