@@ -44,6 +44,8 @@
         <label for="visualizationData3">Saturday</label>
         <input type="radio" name="dataFile" id="visualizationData4">
         <label for="visualizationData4">Sunday</label>
+        <input type="radio" name="dataFile" id="visualizationData5">
+        <label for="visualizationData5">Monday</label>
         <input type="radio" name="dataFile" id="DIFF">
         <label for="DIFF">Diff</label>
     </div>
@@ -61,8 +63,8 @@
                 const isDiff = selectedFile === 'DIFF';
 
                 if (isDiff) {
-                    const filename1 = `visualizationData3.json`;
-                    const filename2 = `visualizationData4.json`;
+                    const filename1 = `visualizationData4.json`;
+                    const filename2 = `visualizationData5.json`;
                     d3.json(filename2).then(data2 => {
                         d3.json(filename1).then(data1 => {
                             const diffData = data2.map((route, i) => {
