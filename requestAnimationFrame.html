@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>JS Playground</title>
+    <style>
+        .row {
+            height: 25px;
+            position: relative;
+        }
+
+        .square {
+            position: absolute;
+            height: 25px;
+            width: 25px;
+        }
+
+        #square1 {
+            background-color: tomato;
+            left: 500px;
+        }
+
+        #square2 {
+            background-color: mediumturquoise;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row">
+        <div class="square" id="square1"></div>
+    </div>
+    <div class="row">
+        <div class="square" id="square2"></div>
+    </div>
+    <script>
+        // This example moves two squares using two different timing functions.
+        // #square1 is moved 10px every time setTimeout() is called.
+        // #square2 is moved 10px every time requestAnimationFrame() is called.
+        // #square1 ends up moving faster because setTimeout() is called many times between renders,
+        // but requestAnimationFrame() gets called only once per render.
+        // In this example, setTimeout() ends up wasting resources calculating positions that are never rendered.
+        function moveSquare(selector) {
+            const parentWidth = document.querySelector(selector).parentElement.clientWidth;
+            let currentLeft = document.querySelector(selector).style['left']; // TODO: this is not getting the 500px on the first iteration
+            if (currentLeft) {
+                currentLeft = Number(currentLeft.substr(0, currentLeft.length - 2));
+            }
+            else {
+                currentLeft = 0;
+            }
+            if (currentLeft > parentWidth) {
+                currentLeft = 0;
+            }
+            document.querySelector(selector).style['left'] = `${currentLeft+10}px`;
+        }
+        function moveSquare1() {
+            moveSquare('#square1');
+            setTimeout(moveSquare1, 0);
+        }
+        function moveSquare2() {
+            moveSquare('#square2');
+            requestAnimationFrame(moveSquare2);
+        }
+        moveSquare1();
+        moveSquare2();
+    </script>
+</body>
+
+</html>
