@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>JS Playground</title>
+</head>
+
+<body>
+  <h1>Downloading video</h1>
+  <script>
+    // Create a canvas element
+    const canvas = document.createElement('canvas');
+    canvas.width = 640;
+    canvas.height = 480;
+
+    // Get a 2D rendering context for the canvas
+    const ctx = canvas.getContext('2d');
+
+    // Set up a simple animation loop
+    let frameCount = 0;
+
+    function animate() {
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw a rectangle that moves across the canvas
+      const x = frameCount % canvas.width;
+      ctx.fillStyle = "green";
+      ctx.fillRect(x, 100, 50, 50);
+
+      // Increment the frame count
+      frameCount++;
+
+      // Request another animation frame
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Create a MediaStream from the canvas
+    const stream = canvas.captureStream();
+
+    // Create a MediaRecorder object
+    const recorder = new MediaRecorder(stream, {
+      mimeType: 'video/webm'
+    });
+
+    // Create an array to store the recorded video chunks
+    const chunks = [];
+
+    // Listen for data available events and store the video chunks
+    recorder.addEventListener('dataavailable', event => {
+      chunks.push(event.data);
+    });
+
+    // Listen for stop events and create a WebM file from the recorded chunks
+    recorder.addEventListener('stop', () => {
+      const blob = new Blob(chunks, {
+        type: 'video/webm'
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'myvideo.webm';
+      a.click();
+    });
+
+    // Start recording
+    recorder.start();
+
+    // Stop recording after 10 seconds
+    setTimeout(() => {
+      recorder.stop();
+    }, 10000);
+  </script>
+</body>
+
+</html>
