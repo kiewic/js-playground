@@ -1,0 +1,53 @@
+[{
+        "category": "airport",
+        "items": [{
+                "name": "MEX",
+                "elevation": 7350
+            },
+            {
+                "name": "GDL",
+                "elevation": 5016
+            },
+            {
+                "name": "SEA",
+                "elevation": 433
+            },
+            {
+                "name": "MTY",
+                "elevation": 1280
+            },
+            {
+                "name": "AMS",
+                "elevation": -11
+            }
+        ]
+    },
+    {
+        "category": "city",
+        "items": [{
+                "name": "Medellín",
+                "elevation": 4905
+            },
+            {
+                "name": "Bogotá",
+                "elevation": 8660
+            }
+        ]
+    },
+    {
+        "category": "mountain",
+        "items": [{
+                "name": "Mount Rainier",
+                "elevation": 14411
+            },
+            {
+                "name": "Mauna Kea",
+                "elevation": 13803
+            },
+            {
+                "name": "Popocatépetl",
+                "elevation": 17694
+            }
+        ]
+    }
+]
