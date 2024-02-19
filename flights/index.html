@@ -40,12 +40,12 @@
 
     <!-- Add radio buttons for file selection -->
     <div>
-        <input type="radio" name="dataFile" id="visualizationData3" checked>
-        <label for="visualizationData3">Saturday</label>
-        <input type="radio" name="dataFile" id="visualizationData4">
-        <label for="visualizationData4">Sunday</label>
-        <input type="radio" name="dataFile" id="visualizationData5">
-        <label for="visualizationData5">Monday</label>
+        <input type="radio" name="dataFile" id="visualizationData10">
+        <label for="visualizationData10">Thu Feb 15</label>
+        <input type="radio" name="dataFile" id="visualizationData11">
+        <label for="visualizationData11">Mon Feb 19</label>
+        <input type="radio" name="dataFile" id="visualizationData12" checked>
+        <label for="visualizationData12">Mon Feb 19 Without Login</label>
         <input type="radio" name="dataFile" id="DIFF">
         <label for="DIFF">Diff</label>
     </div>
@@ -63,13 +63,14 @@
                 const isDiff = selectedFile === 'DIFF';
 
                 if (isDiff) {
-                    const filename1 = `visualizationData4.json`;
-                    const filename2 = `visualizationData5.json`;
+                    const filename1 = `visualizationData10.json`;
+                    const filename2 = `visualizationData11.json`;
                     d3.json(filename2).then(data2 => {
                         d3.json(filename1).then(data1 => {
-                            const diffData = data2.map((route, i) => {
-                                const diffDates = route.dates.map((date2, j) => {
-                                    const date1 = data1[i].dates.find(d => d.date === date2.date) || date2; // if not found, use the same object to show a diff equal to zero
+                            const diffData = data2.map((route2, i) => {
+                                const route1 = data1.find(data1route => data1route.from === route2.from && data1route.to === route2.to);
+                                const diffDates = route2.dates.map((date2, j) => {
+                                    const date1 = route1?.dates.find(d => d.date === date2.date) || date2; // if not found, use the same object to show a diff equal to zero
                                     const diffPrice = date2.price - date1.price;
                                     return {
                                         date: date2.date,
@@ -77,8 +78,8 @@
                                     };
                                 });
                                 return {
-                                    from: route.from,
-                                    to: route.to,
+                                    from: route2.from,
+                                    to: route2.to,
                                     dates: diffDates
                                 };
                             });
