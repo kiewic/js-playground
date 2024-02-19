@@ -63,8 +63,8 @@
                 const isDiff = selectedFile === 'DIFF';
 
                 if (isDiff) {
-                    const filename1 = `visualizationData10.json`;
-                    const filename2 = `visualizationData11.json`;
+                    const filename1 = `visualizationData11.json`;
+                    const filename2 = `visualizationData12.json`;
                     d3.json(filename2).then(data2 => {
                         d3.json(filename1).then(data1 => {
                             const diffData = data2.map((route2, i) => {
@@ -113,9 +113,10 @@
                 const height = inputData.length * cellHeight;
 
                 // Update color scale domain based on new data
-                const minPrice = d3.min(inputData.flatMap(route => route.dates).filter(date => date.price != null), date => date.price);
-                const maxPrice = d3.max(inputData.flatMap(route => route.dates).filter(date => date.price != null), date => date.price);
-                const middlePrice = (maxPrice - minPrice) / 2.75;
+                const middleLowPrice = 150;
+                const MiddleHighPrice = 250;
+                const minPrice = Math.min(d3.min(inputData.flatMap(route => route.dates).filter(date => date.price != null), date => date.price), middleLowPrice);
+                const maxPrice = Math.max(d3.max(inputData.flatMap(route => route.dates).filter(date => date.price != null), date => date.price), MiddleHighPrice);
 
                 document.querySelector('#bestPrice').textContent = minPrice;
                 document.querySelector('#worstPrice').textContent = maxPrice;
@@ -123,10 +124,14 @@
                 const colorScale = !isDiff ? d3.scaleLinear()
                     .domain([
                         minPrice,
-                        middlePrice,
+                        middleLowPrice,
+                        middleLowPrice + 1,
+                        MiddleHighPrice,
+                        MiddleHighPrice + 1,
                         maxPrice
                     ])
-                    .range(['#01FF70', '#FF851B', '#85144b']) :  // Lime to Orange to Maroon
+                    .range(['#01FF70', '#FFDC00', '#FDA014', '#FE3F2E', '#A217CC', '#0A1A38']) // Lime to Orange to Purple
+                    .interpolate(d3.interpolateRgb) :
                     d3.scaleLinear()
                     .domain([
                         minPrice,
@@ -149,6 +154,7 @@
                     svg.attr('width', width);
                 }
 
+                // TODO: Fix new rows not been displayed when new input data has more rows than the previous one
                 // Update rows with new data
                 const rows = svg.selectAll('.row')
                     .data(inputData);
