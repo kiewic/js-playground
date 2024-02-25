@@ -40,12 +40,12 @@
 
     <!-- Add radio buttons for file selection -->
     <div>
-        <input type="radio" name="dataFile" id="visualizationData10">
-        <label for="visualizationData10">Thu Feb 15</label>
-        <input type="radio" name="dataFile" id="visualizationData11">
-        <label for="visualizationData11">Mon Feb 19</label>
-        <input type="radio" name="dataFile" id="visualizationData12" checked>
-        <label for="visualizationData12">Mon Feb 19 Without Login</label>
+        <input type="radio" name="dataFile" id="flights20230225">
+        <label for="flights20230225">Sun Feb 25</label>
+
+        <input type="radio" name="dataFile" id="flights20230225LI" checked>
+        <label for="flights20230225LI">Sun Feb 25 Logged In</label>
+
         <input type="radio" name="dataFile" id="DIFF">
         <label for="DIFF">Diff</label>
     </div>
@@ -59,12 +59,13 @@
         <script>
             function loadData() {
                 const selectedFile = document.querySelector('input[name="dataFile"]:checked').id;
-                const filename = `${selectedFile}.json`;
                 const isDiff = selectedFile === 'DIFF';
 
                 if (isDiff) {
-                    const filename1 = `visualizationData11.json`;
-                    const filename2 = `visualizationData12.json`;
+                    const radios = document.querySelectorAll('input[name="dataFile"]:not(#DIFF)');
+                    const [filename1, filename2] = Array.from(radios).slice(-2).map(radio => `${radio.id}.json`);
+                    console.log(filename1, filename2);
+
                     d3.json(filename2).then(data2 => {
                         d3.json(filename1).then(data1 => {
                             const diffData = data2.map((route2, i) => {
@@ -93,6 +94,7 @@
                     return;
                 }
 
+                const filename = `${selectedFile}.json`;
                 d3.json(filename).then(data => {
                     // Update the chart with new data
                     updateChart(data, isDiff);
