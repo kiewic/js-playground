@@ -49,6 +49,9 @@
         <input type="radio" name="dataFile" id="flights20230228" checked>
         <label for="flights20230228">Tue Feb 28</label>
 
+        <input type="radio" name="dataFile" id="flights20230228JFK">
+        <label for="flights20230228JFK">Tue Feb 28 JFK</label>
+
         <input type="radio" name="dataFile" id="DIFF">
         <label for="DIFF">Diff</label>
     </div>
@@ -174,7 +177,9 @@
                     .data(route => uniqueDates.map(date => ({
                         date,
                         route,
-                        price: route.dates.find(d => d.date === date),
+                        price: route.dates.find(d => d.date === date)?.price,
+                        best: d3.min(route.dates.map(d => d.price)),
+                        worst: d3.max(route.dates.map(d => d.price)),
                     })))
                     .enter()
                     .append('rect')
@@ -183,7 +188,7 @@
                     .attr('y', 0)
                     .attr('width', cellWidth)
                     .attr('height', cellHeight)
-                    .attr('fill', d => d.price?.price == null ? 'white' : colorScale(d.price?.price))
+                    .attr('fill', d => d.price == null ? 'white' : colorScale(d.price))
                     .on('mouseover', showTooltip)
                     .on('mouseout', hideTooltip);
 
@@ -191,9 +196,11 @@
                     .data(route => uniqueDates.map(date => ({
                         date,
                         route,
-                        price: route.dates.find(d => d.date === date),
+                        price: route.dates.find(d => d.date === date)?.price,
+                        best: d3.min(route.dates.map(d => d.price)),
+                        worst: d3.max(route.dates.map(d => d.price)),
                     })))
-                    .attr('fill', d => d.price?.price == null ? 'white' : colorScale(d.price?.price))
+                    .attr('fill', d => d.price == null ? 'white' : colorScale(d.price))
                     // .attr('width', cellWidth); // Update the width based on the new cellWidth
 
                 // Remove any extra rectangles if needed
@@ -208,7 +215,9 @@
                     const {
                         date,
                         route,
-                        price
+                        price,
+                        best,
+                        worst,
                     } = data;
                     const mouseX = event.pageX + 10;
                     const mouseY = event.pageY - 20;
@@ -221,9 +230,15 @@
                         weekday: 'short'
                     });
 
-                    tooltip.html(
-                            `Date: ${nameOfDay} ${date}<br>Route: ${route.from} to ${route.to}<br>Price: ${price?.price ? price.price : ''}`
-                            )
+                    // Note these values are not sanitized
+                    const lines = [
+                        `Date: ${nameOfDay} ${date}`,
+                        `Route: ${route.from} to ${route.to}`,
+                        `Price: ${price != null ? price : ''}`,
+                        `Best: ${best != null ? best : ''} Worst: ${worst != null ? worst : ''}`,
+                    ];
+
+                    tooltip.html(lines.join('<br>'))
                         .style('left', adjustedX + 'px')
                         .style('top', mouseY + 'px')
                         .style('display', 'inline-block');
