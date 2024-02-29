@@ -178,33 +178,18 @@
                         date,
                         route,
                         price: route.dates.find(d => d.date === date)?.price,
-                        best: d3.min(route.dates.map(d => d.price)),
-                        worst: d3.max(route.dates.map(d => d.price)),
                     })))
-                    .enter()
-                    .append('rect')
-                    .attr('class', 'rect-hover')
+                    .join(
+                        enter => enter.append('rect')
+                            .attr('y', 0)
+                            .attr('height', cellHeight)
+                            .attr('class', 'rect-hover')
+                            .on('mouseover', showTooltip)
+                            .on('mouseout', hideTooltip)
+                    )
                     .attr('x', (d, i) => i * cellWidth)
-                    .attr('y', 0)
                     .attr('width', cellWidth)
-                    .attr('height', cellHeight)
-                    .attr('fill', d => d.price == null ? 'white' : colorScale(d.price))
-                    .on('mouseover', showTooltip)
-                    .on('mouseout', hideTooltip);
-
-                const updatedRectangles = rows.selectAll('rect')
-                    .data(route => uniqueDates.map(date => ({
-                        date,
-                        route,
-                        price: route.dates.find(d => d.date === date)?.price,
-                        best: d3.min(route.dates.map(d => d.price)),
-                        worst: d3.max(route.dates.map(d => d.price)),
-                    })))
-                    .attr('fill', d => d.price == null ? 'white' : colorScale(d.price))
-                    // .attr('width', cellWidth); // Update the width based on the new cellWidth
-
-                // Remove any extra rectangles if needed
-                updatedRectangles.exit().remove();
+                    .attr('fill', d => d.price == null ? 'white' : colorScale(d.price));
 
                 // Remove any extra rectangles if needed
                 rows.exit().remove();
