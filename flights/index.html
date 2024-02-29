@@ -227,7 +227,8 @@
                     const rightEdge = window.innerWidth - 10; // 10 is a margin
                     const adjustedX = mouseX + tooltipWidth > rightEdge ? mouseX - tooltipWidth - 20 : mouseX;
                     const nameOfDay = new Date(date).toLocaleDateString('en-US', {
-                        weekday: 'short'
+                        weekday: 'short',
+                        timeZone: 'UTC',
                     });
 
                     // Note these values are not sanitized
