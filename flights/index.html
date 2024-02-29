@@ -217,9 +217,12 @@
                     const tooltipWidth = tooltip.node().offsetWidth;
                     const rightEdge = window.innerWidth - 10; // 10 is a margin
                     const adjustedX = mouseX + tooltipWidth > rightEdge ? mouseX - tooltipWidth - 20 : mouseX;
+                    const nameOfDay = new Date(date).toLocaleDateString('en-US', {
+                        weekday: 'short'
+                    });
 
                     tooltip.html(
-                            `Date: ${date}<br>Route: ${route.from} to ${route.to}<br>Price: ${price?.price ? price.price : ''}`
+                            `Date: ${nameOfDay} ${date}<br>Route: ${route.from} to ${route.to}<br>Price: ${price?.price ? price.price : ''}`
                             )
                         .style('left', adjustedX + 'px')
                         .style('top', mouseY + 'px')
