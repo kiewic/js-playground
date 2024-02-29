@@ -201,11 +201,11 @@
                         date,
                         route,
                         price,
-                        best,
-                        worst,
                     } = data;
                     const mouseX = event.pageX + 10;
                     const mouseY = event.pageY - 20;
+                    const best = d3.least(route.dates, d => d.price);
+                    const worst = d3.greatest(route.dates, d => d.price);
 
                     // Check if tooltip is going outside the right edge of the page
                     const tooltipWidth = tooltip.node().offsetWidth;
@@ -218,10 +218,11 @@
 
                     // Note these values are not sanitized
                     const lines = [
-                        `Date: ${nameOfDay} ${date}`,
                         `Route: ${route.from} to ${route.to}`,
+                        `Date: ${nameOfDay} ${date}`,
                         `Price: ${price != null ? price : ''}`,
-                        `Best: ${best != null ? best : ''} Worst: ${worst != null ? worst : ''}`,
+                        `<small>Best: ${best != null ? `${best.price} on ${best.date}` : ''}</small>`,
+                        `<small>Worst: ${worst != null ? `${worst.price} on ${worst.date}` : ''}</small>`,
                     ];
 
                     tooltip.html(lines.join('<br>'))
