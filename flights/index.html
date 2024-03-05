@@ -40,17 +40,17 @@
 
     <!-- Add radio buttons for file selection -->
     <div>
-        <input type="radio" name="dataFile" id="flights20230225">
-        <label for="flights20230225">Sun Feb 25</label>
+        <input type="radio" name="dataFile" id="flights20240225">
+        <label for="flights20240225">Sun Feb 25</label>
 
-        <input type="radio" name="dataFile" id="flights20230225LI">
-        <label for="flights20230225LI">Sun Feb 25 Logged In</label>
+        <input type="radio" name="dataFile" id="flights20240225LI">
+        <label for="flights20240225LI">Sun Feb 25 Logged In</label>
 
-        <input type="radio" name="dataFile" id="flights20230228" checked>
-        <label for="flights20230228">Tue Feb 28</label>
+        <input type="radio" name="dataFile" id="flights20240228">
+        <label for="flights20240228">Tue Feb 28</label>
 
-        <input type="radio" name="dataFile" id="flights20230228JFK">
-        <label for="flights20230228JFK">Tue Feb 28 JFK</label>
+        <input type="radio" name="dataFile" id="flights20240305" checked>
+        <label for="flights20240305">Wed Mar 5</label>
 
         <input type="radio" name="dataFile" id="DIFF">
         <label for="DIFF">Diff</label>
@@ -122,9 +122,9 @@
 
                 // Update color scale domain based on new data
                 const middleLowPrice = 150;
-                const MiddleHighPrice = 250;
+                const middleHighPrice = 250;
                 const minPrice = Math.min(d3.min(inputData.flatMap(route => route.dates).filter(date => date.price != null), date => date.price), middleLowPrice);
-                const maxPrice = Math.max(d3.max(inputData.flatMap(route => route.dates).filter(date => date.price != null), date => date.price), MiddleHighPrice);
+                const maxPrice = Math.max(d3.max(inputData.flatMap(route => route.dates).filter(date => date.price != null), date => date.price), middleHighPrice);
 
                 document.querySelector('#bestPrice').textContent = minPrice;
                 document.querySelector('#worstPrice').textContent = maxPrice;
@@ -134,8 +134,8 @@
                         minPrice,
                         middleLowPrice,
                         middleLowPrice + 1,
-                        MiddleHighPrice,
-                        MiddleHighPrice + 1,
+                        middleHighPrice,
+                        middleHighPrice + 1,
                         maxPrice
                     ])
                     .range(['#01FF70', '#FFDC00', '#FDA014', '#FE3F2E', '#A217CC', '#0A1A38']) // Lime to Orange to Purple
