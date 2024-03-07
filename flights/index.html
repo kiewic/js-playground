@@ -54,9 +54,15 @@
 
         <input type="radio" name="dataFile" id="DIFF">
         <label for="DIFF">Diff</label>
+    <div>
+        <input type="checkbox" id="friday">
+        <label for="friday">Fri</label>
 
-        <input type="checkbox" id="weekends">
-        <label for="weekends">Fri, Sat & Sun</label>
+        <input type="checkbox" id="saturday">
+        <label for="saturday">Sat</label>
+
+        <input type="checkbox" id="sunday">
+        <label for="sunday">Sun</label>
     </div>
 
     <div>
@@ -68,8 +74,12 @@
         <script>
             function loadData() {
                 const selectedFile = document.querySelector('input[name="dataFile"]:checked').id;
-                const isWeekends = document.querySelector('#weekends').checked;
                 const isDiff = selectedFile === 'DIFF';
+                const dayFilters = {
+                    friday: document.querySelector('#friday').checked,
+                    saturday: document.querySelector('#saturday').checked,
+                    sunday: document.querySelector('#sunday').checked,
+                };
 
                 if (isDiff) {
                     const radios = document.querySelectorAll('input[name="dataFile"]:not(#DIFF)');
@@ -77,9 +87,9 @@
                     console.log(filename1, filename2);
 
                     d3.json(filename2).then(data2 => {
-                        data2 = filterWeekends(data2, isWeekends);
+                        data2 = filterWeekends(data2, dayFilters);
                         d3.json(filename1).then(data1 => {
-                            data2 = filterWeekends(data2, isWeekends);
+                            data2 = filterWeekends(data2, dayFilters);
                             const diffData = data2.map((route2, i) => {
                                 const route1 = data1.find(data1route => data1route.from === route2.from && data1route.to === route2.to);
                                 const diffDates = route2.dates.map((date2, j) => {
@@ -108,7 +118,7 @@
 
                 const filename = `${selectedFile}.json`;
                 d3.json(filename).then(data => {
-                    data = filterWeekends(data, isWeekends);
+                    data = filterWeekends(data, dayFilters);
                     // Update the chart with new data
                     updateChart(data, isDiff);
                 }).catch(error => {
@@ -116,10 +126,14 @@
                 });
             }
 
-            function filterWeekends(data, isWeekends) {
+            function filterWeekends(data, dayFilters) {
+                const filter = [];
+                if (dayFilters.sunday) filter.push(0);
+                if (dayFilters.friday) filter.push(5);
+                if (dayFilters.saturday) filter.push(6);
                 return data.map(route => ({
                     ...route,
-                    dates: route.dates.filter(date => !isWeekends || [0, 5, 6].includes(new Date(date.date).getUTCDay()))
+                    dates: route.dates.filter(date => filter.length === 0 || filter.includes(new Date(date.date).getUTCDay()))
                 }));
             }
 
