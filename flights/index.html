@@ -38,35 +38,45 @@
 <body>
     <div class="tooltip"></div>
 
-    <!-- Add radio buttons for file selection -->
-    <div>
-        <input type="radio" name="dataFile" id="flights20240225">
-        <label for="flights20240225">Sun Feb 25</label>
+    <div id="fileOptions">
+        <!-- Add radio buttons for file selection -->
+        <script>
+            const files = [
+                'flights20240306Login',
+                'flights20240308',
+                'flights20240311',
+                'flights20240311Login',
+                'flights20240312',
+            ];
+            const container = document.getElementById('fileOptions');
+            files.forEach((file, index) => {
+                const dateString = file.replace('flights', '').slice(0, 8);
+                const year = dateString.slice(0, 4);
+                const month = dateString.slice(4, 6);
+                const day = dateString.slice(6, 8);
+                const date = new Date(year, month - 1, day);
 
-        <input type="radio" name="dataFile" id="flights20240228">
-        <label for="flights20240228">Tue Feb 28</label>
+                let text = new Date(date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' });
+                if (file.includes('Login')) {
+                    text = `${text} (Login)`;
+                }
 
-        <input type="radio" name="dataFile" id="flights20240305">
-        <label for="flights20240305">Tue Mar 5</label>
+                const input = document.createElement('input');
+                input.setAttribute('type', 'radio');
+                input.setAttribute('name', 'dataFile');
+                input.setAttribute('id', file);
+                if (index === files.length - 1) {
+                    input.setAttribute('checked', true);
+                }
 
-        <input type="radio" name="dataFile" id="flights20240306" checked>
-        <label for="flights20240306">Wed Mar 6</label>
+                const label = document.createElement('label');
+                label.setAttribute('for', file);
+                label.textContent = text;
 
-        <input type="radio" name="dataFile" id="flights20240306Login">
-        <label for="flights20240306Login">Wed Mar 6 Login</label>
-
-        <input type="radio" name="dataFile" id="flights20240307Login">
-        <label for="flights20240307Login">Thu Mar 7 Login</label>
-
-        <input type="radio" name="dataFile" id="flights20240308">
-        <label for="flights20240308">Fri Mar 8</label>
-
-        <input type="radio" name="dataFile" id="flights20240311">
-        <label for="flights20240311">Mon Mar 11</label>
-
-        <input type="radio" name="dataFile" id="flights20240311Login" checked>
-        <label for="flights20240311Login">Mon Mar 11 Login</label>
-
+                container.appendChild(input);
+                container.appendChild(label);
+            });
+        </script>
         <input type="radio" name="dataFile" id="DIFF">
         <label for="DIFF">Diff</label>
     </div>
