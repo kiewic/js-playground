@@ -41,3 +41,13 @@ const handler = {
     }
 };
 newHierarchy.leafNodes  = new Proxy(newHierarchy.leafNodes, handler);
+
+
+const handler = {
+    deleteProperty: function (target, property) {
+        console.log(`Property '${property}' is being deleted`);
+        debugger;
+        return delete target[property];
+    }
+};
+myObject = new Proxy(myObject, handler);
