@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+    <title>Flexbox with Different Font Sizes</title>
+    <style>
+        .container {
+            display: flex;
+            /* Align items to the bottom */
+            /* align-items: flex-end; */
+            /* justify-content: flex-end; */
+            /* vertical-align: bottom; */
+        }
+
+        .text-container {
+            flex: 1;
+            padding: 20px;
+            height: 200px;
+        }
+
+        .c1 {
+            background-color: aquamarine;
+            /* font-size: 16px; */
+        }
+
+        .c2 {
+            background-color: plum;
+            /* font-size: 24px; */
+        }
+
+        .c3 {
+            background-color: paleturquoise;
+            /* font-size: 32px; */
+        }
+
+        div p {
+            margin: 0;
+            padding: 0;
+            background-color: bisque;
+            height: 200px;
+            line-height: 200px;
+            display: inline-block;
+            /* vertical-align: text-bottom; */
+            /* vertical-align: bottom; */
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="text-container c1">
+            <p>Small Text</p>
+        </div>
+        <div class="text-container c2">
+            <p>Medium Text</p>
+        </div>
+        <div class="text-container c3">
+            <p>Large Text</p>
+        </div>
+    </div>
+
+    <div>
+        <span style="font-size: 16px; vertical-align: bottom; line-height: 80px; background-color: tomato;">small text</span>
+        <span style="font-size: 24px; vertical-align: bottom; line-height: 80px; background-color: aquamarine;">large text</span>
+    </div>
+
+</body>
+
+</html>
