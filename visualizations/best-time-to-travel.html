@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Suitability Chart</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .best {
+            background-color: #c1e6c6;
+            /* light green */
+        }
+
+        .good {
+            background-color: #f8e88b;
+            /* light yellow */
+        }
+
+        .average {
+            background-color: #f7b7b7;
+            /* light red */
+        }
+    </style>
+</head>
+
+<body>
+
+    <table>
+        <thead>
+            <tr>
+                <th>City</th>
+                <th>January</th>
+                <th>February</th>
+                <th>March</th>
+                <th>April</th>
+                <th>May</th>
+                <th>June</th>
+                <th>July</th>
+                <th>August</th>
+                <th>September</th>
+                <th>October</th>
+                <th>November</th>
+                <th>December</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Add more rows for other cities -->
+        </tbody>
+    </table>
+
+    <script>
+        const travelData = [{
+                city: "Taipei",
+                suitability: ["good", "good", "average", "best", "best", "average", "average", "average", "good",
+                    "good", "good", "good"
+                ]
+            },
+            {
+                city: "Taichung",
+                suitability: ["good", "good", "average", "best", "best", "average", "average", "average", "good",
+                    "good", "good", "good"
+                ]
+            },
+            {
+                city: "Manila",
+                suitability: ["good", "good", "average", "average", "average", "average", "average", "average",
+                    "average", "good", "good", "good"
+                ]
+            },
+            {
+                city: "Cebu",
+                suitability: ["good", "good", "average", "average", "average", "average", "average", "average",
+                    "average", "good", "good", "good"
+                ]
+            },
+            {
+                city: "Hanoi",
+                suitability: ["average", "average", "average", "best", "best", "average", "average", "average",
+                    "average", "average", "average", "average"
+                ]
+            },
+            {
+                city: "Phú Quốc",
+                suitability: ["best", "best", "best", "best", "best", "best", "best", "best", "best", "best",
+                    "best", "best"
+                ]
+            },
+            {
+                city: "Chiang Mai",
+                suitability: ["best", "best", "best", "average", "average", "average", "average", "average",
+                    "average", "best", "best", "best"
+                ]
+            },
+            {
+                city: "Bangkok",
+                suitability: ["good", "good", "average", "average", "average", "average", "average", "average",
+                    "average", "good", "good", "good"
+                ]
+            },
+            {
+                city: "Penang",
+                suitability: ["best", "best", "best", "average", "average", "average", "average", "average",
+                    "average", "best", "best", "best"
+                ]
+            },
+            {
+                city: "Kuala Lumpur",
+                suitability: ["best", "best", "best", "average", "average", "average", "average", "average",
+                    "average", "best", "best", "best"
+                ]
+            },
+            {
+                city: "Singapore",
+                suitability: ["best", "best", "best", "best", "average", "average", "average", "average", "average",
+                    "best", "best", "best"
+                ]
+            },
+        ];
+
+        const tableBody = document.querySelector('table tbody');
+
+        travelData.forEach(cityData => {
+            const row = document.createElement('tr');
+            const cityCell = document.createElement('td');
+            cityCell.textContent = cityData.city;
+            row.appendChild(cityCell);
+            cityData.suitability.forEach(suitability => {
+                const cell = document.createElement('td');
+                cell.textContent = suitability.charAt(0).toUpperCase() + suitability.slice(1);
+                switch (suitability) {
+                    case 'best':
+                        cell.classList.add('best');
+                        break;
+                    case 'good':
+                        cell.classList.add('good');
+                        break;
+                    case 'average':
+                        cell.classList.add('average');
+                        break;
+                    default:
+                        break;
+                }
+                row.appendChild(cell);
+            });
+            tableBody.appendChild(row);
+        });
+        console.log(travelData);
+    </script>
+
+</body>
+
+</html>
