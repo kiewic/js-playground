@@ -44,6 +44,20 @@ newHierarchy.leafNodes  = new Proxy(newHierarchy.leafNodes, handler);
 
 
 const handler = {
+  get(target, property) {
+    if (property === 'push') {
+      return function(...args) {
+        debugger; // This will trigger the debugger
+        return Array.prototype.push.apply(target, args);
+      };
+    }
+    return Reflect.get(target, property);
+  }
+};
+result = new Proxy(result, handler);
+
+
+const handler = {
     deleteProperty: function (target, property) {
         console.log(`Property '${property}' is being deleted`);
         debugger;
