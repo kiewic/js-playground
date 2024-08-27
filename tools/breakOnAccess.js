@@ -31,19 +31,6 @@ newHierarchy = new Proxy(newHierarchy, handler);
 
 
 const handler = {
-    set(target, prop, value, receiver) {
-        // Check if the property being set is a numeric index
-        if (!isNaN(prop)) {
-            debugger;
-        }
-        // Set the property value
-        return Reflect.set(...arguments);
-    }
-};
-newHierarchy.leafNodes  = new Proxy(newHierarchy.leafNodes, handler);
-
-
-const handler = {
   get(target, property) {
     if (property === 'push') {
       return function(...args) {
@@ -55,6 +42,30 @@ const handler = {
   }
 };
 result = new Proxy(result, handler);
+
+
+this.legacyService = new Proxy(this.legacyService, {
+  get(target, prop, receiver) {
+    if (typeof target[prop] === 'function') {
+      console.log(`Method ${prop} was accessed`);
+      debugger;  // Breakpoint
+    }
+    return Reflect.get(target, prop, receiver);
+  }
+});
+
+
+const handler = {
+    set(target, prop, value, receiver) {
+        // Check if the property being set is a numeric index
+        if (!isNaN(prop)) {
+            debugger;
+        }
+        // Set the property value
+        return Reflect.set(...arguments);
+    }
+};
+newHierarchy.leafNodes  = new Proxy(newHierarchy.leafNodes, handler);
 
 
 const handler = {
