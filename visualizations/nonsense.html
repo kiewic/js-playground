@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>JS Playground</title>
+  <style>
+    html,
+    body {
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+  <script src="../d3.v7.js"></script>
+</head>
+
+<body>
+  <script>
+    const width = window.innerWidth * 4 / 5;
+    const height = window.innerHeight * 4 / 5;
+    const svg1 = d3.select('body')
+      .append('svg')
+      .attr('width', width)
+      .attr('height', height);
+    const rect1 = svg1.append('rect')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', width)
+      .attr('height', height)
+      .attr('fill', '#39329a');
+    const rect2 = svg1.append('rect')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', width / 2)
+      .attr('height', height / 2)
+      .attr('fill', '#ff0066');
+    const rect3 = svg1.append('rect')
+      .attr('x', width / 2)
+      .attr('y', height / 2)
+      .attr('width', width / 2)
+      .attr('height', height / 2)
+      .attr('fill', '#ff0066');
+    const circle1 = svg1.append('circle')
+      .attr('r', 100)
+      .attr('cx', 100)
+      .attr('cy', 100)
+      .attr('fill', 'pink');
+    const mask1 = svg1.append('defs')
+      .append('mask')
+      .attr('id', 'mask1')
+      .append('circle')
+      .attr('r', 100)
+      .attr('cx', 100)
+      .attr('cy', 100)
+      .attr('fill', 'black');
+    const g1 = svg1.append('g')
+      .attr('x', 0)
+      .attr('y', 0)
+      // .style('mask', 'url(#mask1)')
+      .attr('width', width / 2)
+      .attr('height', height / 2);
+    const text1 = g1.append('text')
+      .attr('x', 0)
+      .attr('y', 200)
+      .attr('text-anchor', 'middle') // Vertically
+      .style('font-size', '200px')
+      .text('Japan');
+  </script>
+</body>
+
+</html>
