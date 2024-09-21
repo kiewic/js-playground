@@ -31,6 +31,10 @@
             {
                 "name": "Bogotá",
                 "elevation": 8660
+            },
+            {
+                "name": "Paradise, MR",
+                "elevation": 5400
             }
         ]
     },
@@ -43,6 +47,10 @@
             {
                 "name": "Mauna Kea",
                 "elevation": 13803
+            },
+            {
+                "name": "Mount Fuji",
+                "elevation": 12388
             },
             {
                 "name": "Popocatépetl",
