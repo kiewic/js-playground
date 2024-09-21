@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D3 World Map with Flights</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        svg {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="https://unpkg.com/d3-geo-projection@2"></script>
+    <script>
+        // Define the width and height of the map
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        // Create an SVG element for the map
+        const svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        // Add a rectangle for the ocean color
+        svg.append("rect")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("fill", "#DAF1FE"); // Set ocean color
+
+        // Define a map projection
+        const projection = d3.geoMercator()
+            .scale((width + 1) / 2 / Math.PI)
+            .translate([width / 2, height / 2]);
+
+        // Define a path generator using the projection
+        const path = d3.geoPath().projection(projection);
+
+        // Load world map data (GeoJSON or TopoJSON)
+        d3.json("https://d3js.org/world-110m.v1.json").then(world => {
+            // Convert TopoJSON to GeoJSON
+            const countries = topojson.feature(world, world.objects.countries).features;
+
+            // Draw countries
+            svg.selectAll("path")
+                .data(countries)
+                .enter().append("path")
+                .attr("d", path)
+                .attr("fill", "#ccc")
+                .attr("stroke", "#999");
+
+            // Create a larger list of airport locations
+            const airports = [{
+                    code: "JFK",
+                    coordinates: [-73.7781, 40.6413]
+                }, // New York
+                {
+                    code: "LAX",
+                    coordinates: [-118.4085, 33.9416]
+                }, // Los Angeles
+                {
+                    code: "CDG",
+                    coordinates: [2.55, 49.0128]
+                }, // Paris
+                {
+                    code: "HND",
+                    coordinates: [139.7811, 35.5494]
+                }, // Tokyo
+                {
+                    code: "SYD",
+                    coordinates: [151.2093, -33.8688]
+                }, // Sydney
+                {
+                    code: "DXB",
+                    coordinates: [55.3642, 25.2528]
+                }, // Dubai
+                {
+                    code: "SIN",
+                    coordinates: [103.9940, 1.3591]
+                }, // Singapore
+                {
+                    code: "LHR",
+                    coordinates: [-0.4543, 51.4700]
+                }, // London Heathrow
+                {
+                    code: "HKG",
+                    coordinates: [113.9260, 22.3080]
+                }, // Hong Kong
+                {
+                    code: "YYZ",
+                    coordinates: [-79.6270, 43.6777]
+                }, // Toronto
+                {
+                    code: "BOM",
+                    coordinates: [72.8656, 19.0896]
+                }, // Mumbai
+                {
+                    code: "MUC",
+                    coordinates: [11.7890, 48.3538]
+                }, // Munich
+                {
+                    code: "FRA",
+                    coordinates: [8.5706, 50.0333]
+                }, // Frankfurt
+                {
+                    code: "SFO",
+                    coordinates: [-122.4194, 37.7749]
+                }, // San Francisco
+                {
+                    code: "IST",
+                    coordinates: [28.8157, 41.2752]
+                }, // Istanbul
+                {
+                    code: "MEX",
+                    coordinates: [-99.0720, 19.4360]
+                }, // Mexico City
+                {
+                    code: "GDL",
+                    coordinates: [-103.3144, 20.5211]
+                }, // Guadalajara
+                {
+                    code: "AMS",
+                    coordinates: [4.7615, 52.3086]
+                }, // Amsterdam
+                {
+                    code: "SVO",
+                    coordinates: [37.4144, 55.9722]
+                }, // Moscow Sheremetyevo
+                {
+                    code: "YYC",
+                    coordinates: [-114.0719, 51.1300]
+                }, // Calgary
+                {
+                    code: "DUS",
+                    coordinates: [6.7855, 51.2894]
+                }, // Düsseldorf
+                {
+                    code: "CGK",
+                    coordinates: [106.6501, -6.1256]
+                }, // Jakarta
+                {
+                    code: "CPT",
+                    coordinates: [18.6015, -33.9642]
+                }, // Cape Town
+                {
+                    code: "MNL",
+                    coordinates: [121.0058, 14.5086]
+                }, // Manila
+                {
+                    code: "BKK",
+                    coordinates: [100.5072, 13.7563]
+                }, // Bangkok
+            ];
+
+            // Function to generate a curved line between two points (for flights)
+            const generateArc = (start, end) => {
+                return d3.line()
+                    .curve(d3.curveBasis)([
+                        projection(start),
+                        [(projection(start)[0] + projection(end)[0]) / 2, (projection(start)[1] +
+                            projection(end)[1]) / 2 - 100],
+                        projection(end)
+                    ]);
+            };
+
+            // Function to animate the flight paths
+            const animateFlight = () => {
+                const startAirport = airports[Math.floor(Math.random() * airports.length)];
+                let endAirport;
+
+                // Ensure end airport is not the same as start airport
+                do {
+                    endAirport = airports[Math.floor(Math.random() * airports.length)];
+                } while (startAirport.code === endAirport.code);
+
+                const start = startAirport.coordinates;
+                const end = endAirport.coordinates;
+                const pathData = generateArc(start, end);
+
+                // Append the flight path (animated arrow)
+                const pathElement = svg.append("path")
+                    .attr("d", pathData)
+                    .attr("stroke", "#A219FF") // Set the arrow color to peony purple
+                    .attr("stroke-width", 2)
+                    .attr("fill", "none");
+
+                // Text elements for departure and arrival airport codes
+                const departureText = svg.append("text")
+                    .attr("x", projection(start)[0])
+                    .attr("y", projection(start)[1])
+                    .attr("text-anchor", "middle")
+                    .attr("dy", -10)
+                    .attr("font-size", "14px")
+                    .attr("font-weight", "bold")
+                    .attr("fill", "#A219FF") // Set departure text color to peony purple
+                    .style("opacity", 0)
+                    .text(startAirport.code);
+
+                const arrivalText = svg.append("text")
+                    .attr("x", projection(end)[0])
+                    .attr("y", projection(end)[1])
+                    .attr("text-anchor", "middle")
+                    .attr("dy", -10)
+                    .attr("font-size", "14px")
+                    .attr("font-weight", "bold")
+                    .attr("fill", "#A219FF") // Set arrival text color to peony purple
+                    .style("opacity", 0)
+                    .text(endAirport.code);
+
+                // Animate the path (flight)
+                const totalLength = pathElement.node().getTotalLength();
+
+                // Show departure code before the flight
+                departureText.transition()
+                    .duration(500)
+                    .style("opacity", 1)
+                    .transition()
+                    .delay(1000)
+                    .duration(500)
+                    .style("opacity", 0); // Fade out after some time
+
+                pathElement
+                    .attr("stroke-dasharray", totalLength)
+                    .attr("stroke-dashoffset", totalLength)
+                    .transition()
+                    .duration(2000)
+                    .ease(d3.easeSin)
+                    .attr("stroke-dashoffset", 0)
+                    .on("end", () => {
+                        // Show arrival code after the flight arrives
+                        arrivalText.transition()
+                            .duration(500)
+                            .style("opacity", 1)
+                            .transition()
+                            .delay(1000)
+                            .duration(500)
+                            .style("opacity", 0)
+                            .on("end", () => {
+                                pathElement.remove(); // Remove the path after the animation
+                                animateFlight(); // Start another flight
+                            });
+                    });
+            };
+
+            // Start the first flight animation
+            animateFlight();
+        });
+    </script>
+</body>
+
+</html>

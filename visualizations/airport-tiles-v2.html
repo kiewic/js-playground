@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airport Rectangles Animation</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        svg {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        const airportCodes = [
+            // Add the top 100 airport codes here, for example:
+            "ATL", "PEK", "LAX", "ORD", "DFW", "JFK", "HKG", "PVG", "CDG", "AMS",
+            "FRA", "SIN", "CAN", "IST", "DXB", "BKK", "DEL", "SYD", "KUL", "MEX",
+            "SEA", "SFO", "LAS", "CLT", "MIA", "PHX", "IAH", "DEN", "MSP", "MCO",
+            "BOS", "PHL", "DTW", "MDW", "LGA", "DCA", "SLC", "SAN", "BWI", "TPA",
+            "FLL", "PDX", "STL", "HNL", "OAK", "MCI", "SNA", "RDU", "AUS", "SJC",
+            "CLE", "BNA", "SMF", "SDF", "MSY", "SAT", "IND", "MKE", "PIT", "CMH",
+            "RSW", "BDL", "BUF", "RIC", "OKC", "TUL", "OMA", "ALB", "GSO", "PVD",
+            "ONT", "LIT", "BOI", "ELP", "TUS", "TYS", "HRL", "COS", "GEG", "MHT",
+            "RNO", "GRR", "ICT", "MEM", "ORF", "CHS", "DAY", "ISP", "SYR", "TLH",
+            "SAV", "JAN", "ABQ", "JAX", "RSW", "BOG", "YYZ", "YVR", "YYC", "YUL"
+        ];
+
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const margin = 5;
+
+        // Create SVG container
+        const svg = d3.select("body")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        // Define a 10x10 grid (100 total airports)
+        const cols = 10;
+        const rows = 10;
+
+        // Calculate the width and height of each rectangle without margins
+        const rectWidth = width / cols;
+        const rectHeight = height / rows;
+
+        // Extracted color palette from the image
+        const colorPalette = [
+            "#FEDD31", "#FEC640", "#FDAF5B", "#FC9574", "#FC76BC", "#FB5EA8", "#FA30C7", "#D854B9",
+            "#B05EDA", "#A781DB", "#BF84DC", "#809DDD", "#6BA5DE", "#54B5DF", "#46C0DF", "#5FD1ED"
+        ];
+
+        // Function to pick a color from the palette
+        function getColor(i) {
+            return colorPalette[i % colorPalette.length];
+        }
+
+        // Create the rectangles without rounded corners and border
+        const rectangles = svg.selectAll("rect")
+            .data(airportCodes)
+            .enter()
+            .append("rect")
+            .attr("width", rectWidth)
+            .attr("height", rectHeight)
+            .attr("x", (d, i) => (i % cols) * rectWidth)
+            .attr("y", (d, i) => Math.floor(i / cols) * rectHeight)
+            .attr("fill", (d, i) => getColor(i))
+            .attr("stroke", "none"); // Remove the stroke to eliminate the border
+
+
+        // Create text labels for airport codes, ensuring they are centered
+        svg.selectAll("text")
+            .data(airportCodes)
+            .enter()
+            .append("text")
+            .attr("x", (d, i) => (i % cols) * rectWidth + rectWidth / 2) // Center horizontally
+            .attr("y", (d, i) => Math.floor(i / cols) * rectHeight + rectHeight / 2) // Center vertically
+            .attr("dy", ".35em")
+            .attr("text-anchor", "middle")
+            .attr("fill", "white")
+            .attr("font-size", rectHeight * 0.4) // Adjust the size as needed
+            .attr("font-family", "sans-serif") // Set the font to sans-serif
+            .text(d => d);
+
+        // Function to make rectangles blink randomly
+        function blink() {
+            rectangles
+                .transition()
+                .delay(() => Math.random() * 3000) // Random delay
+                .duration(500)
+                .attr("fill", (d, i) => getColor(Math.floor(Math.random() * colorPalette.length)))
+                .on("end", blink); // Repeat the animation
+        }
+
+        // Start blinking
+        blink();
+
+        // Update SVG size on window resize
+        window.addEventListener('resize', () => {
+            svg.attr("width", window.innerWidth)
+                .attr("height", window.innerHeight);
+        });
+    </script>
+</body>
+
+</html>
