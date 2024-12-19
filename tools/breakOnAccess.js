@@ -48,13 +48,24 @@ this.legacyService = new Proxy(this.legacyService, {
   get(target, prop, receiver) {
     if (typeof target[prop] === 'function') {
       console.log(`Method ${prop} was accessed`);
-      debugger;  // Breakpoint
+      debugger;
     }
     return Reflect.get(target, prop, receiver);
   }
 });
 
 
+this.viewModel = new Proxy(this.viewModel, {
+    set(target, prop, value, receiver) {
+        if (prop === 'sourceSelector') {
+            debugger;
+        }
+        return Reflect.set(...arguments);
+    }
+});
+
+
+// Arrays
 const handler = {
     set(target, prop, value, receiver) {
         // Check if the property being set is a numeric index
@@ -65,7 +76,7 @@ const handler = {
         return Reflect.set(...arguments);
     }
 };
-newHierarchy.leafNodes  = new Proxy(newHierarchy.leafNodes, handler);
+newHierarchy.leafNodes = new Proxy(newHierarchy.leafNodes, handler);
 
 
 const handler = {
