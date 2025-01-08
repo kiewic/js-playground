@@ -44,24 +44,26 @@ const handler = {
 result = new Proxy(result, handler);
 
 
-this.legacyService = new Proxy(this.legacyService, {
-  get(target, prop, receiver) {
-    if (typeof target[prop] === 'function') {
-      console.log(`Method ${prop} was accessed`);
-      debugger;
-    }
-    return Reflect.get(target, prop, receiver);
-  }
-});
-
-
-this.viewModel = new Proxy(this.viewModel, {
+// Get, set or delete
+node = new Proxy(node, {
+    get(target, prop, receiver) {
+        if (prop === "disabled") {
+            debugger;
+        }
+        return Reflect.get(target, prop, receiver);
+    },
     set(target, prop, value, receiver) {
-        if (prop === 'sourceSelector') {
+        if (prop === "disabled") {
             debugger;
         }
         return Reflect.set(...arguments);
-    }
+    },
+    deleteProperty(target, prop) {
+        if (prop === "disabled") {
+            debugger;
+        }
+        return Reflect.deleteProperty(target, prop);
+    },
 });
 
 
