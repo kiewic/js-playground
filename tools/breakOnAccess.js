@@ -20,30 +20,6 @@ window.break1 = function (obj, propertyKey) {
 }
 
 
-const handler = {
-    get(target, prop, receiver) {
-        debugger;
-        // Return the accessed property
-        return Reflect.get(...arguments);
-    }
-};
-newHierarchy = new Proxy(newHierarchy, handler);
-
-
-const handler = {
-  get(target, property) {
-    if (property === 'push') {
-      return function(...args) {
-        debugger; // This will trigger the debugger
-        return Array.prototype.push.apply(target, args);
-      };
-    }
-    return Reflect.get(target, property);
-  }
-};
-result = new Proxy(result, handler);
-
-
 // Get, set or delete
 node = new Proxy(node, {
     get(target, prop, receiver) {
@@ -81,6 +57,33 @@ const handler = {
 newHierarchy.leafNodes = new Proxy(newHierarchy.leafNodes, handler);
 
 
+// Get function
+this.legacyService = new Proxy(this.legacyService, {
+    get(target, prop, receiver) {
+        if (typeof target[prop] === 'function') {
+            console.log(`Method ${prop} was accessed`);
+            debugger;
+        }
+        return Reflect.get(target, prop, receiver);
+    }
+});
+
+
+// Function invocation
+result = new Proxy(result, {
+    get(target, property) {
+        if (property === 'push') {
+            return function (...args) {
+                debugger;
+                return Array.prototype.push.apply(target, args);
+            };
+        }
+        return Reflect.get(target, property);
+    }
+});
+
+
+// Delete
 const handler = {
     deleteProperty: function (target, property) {
         console.log(`Property '${property}' is being deleted`);
