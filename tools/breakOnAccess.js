@@ -44,17 +44,26 @@ node = new Proxy(node, {
 
 
 // Arrays
-const handler = {
-    set(target, prop, value, receiver) {
-        // Check if the property being set is a numeric index
-        if (!isNaN(prop)) {
+values = new Proxy(values, {
+    get(target, prop, receiver) {
+        if (typeof prop === 'string' && !isNaN(Number(prop))) {
             debugger;
         }
-        // Set the property value
-        return Reflect.set(...arguments);
-    }
-};
-newHierarchy.leafNodes = new Proxy(newHierarchy.leafNodes, handler);
+        return Reflect.get(target, prop, receiver);
+    },
+    set(target, prop, value, receiver) {
+        if (typeof prop === 'string' && !isNaN(Number(prop))) {
+            debugger;
+        }
+        return Reflect.set(target, prop, value, receiver);
+    },
+    deleteProperty(target, prop) {
+        if (typeof prop === 'string' && !isNaN(Number(prop))) {
+            debugger;
+        }
+        return Reflect.deleteProperty(target, prop);
+    },
+});
 
 
 // Get function
