@@ -44,7 +44,7 @@ node = new Proxy(node, {
 
 
 // Arrays
-values = new Proxy(values, {
+values = new Proxy([...values], {
     get(target, prop, receiver) {
         if (typeof prop === 'string' && !isNaN(Number(prop))) {
             debugger;
