@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lyrics Typing Practice</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #111;
+      color: white;
+      font-family: sans-serif;
+    }
+    #viewport {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100vw;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    #line {
+      display: inline-block;
+      transition: transform 0.1s linear;
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
+    .char {
+      transition: color 0.2s;
+    }
+    .typed {
+      color: lime;
+    }
+    .wrong {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div id="viewport">
+    <div id="line"></div>
+  </div>
+
+  <script>
+    const lyric = `(If this world were mine)
+Hey, Roman numeral seven, bae, drop it like it's hot
+If this world was mine, I'd take your dreams and make 'em multiply
+If this world was mine, I'd take your enemies in front of God
+Introduce 'em to that light, hit them strictly with that fire
+Fah-fah, fah-fah-fah, fah-fah, fah
+Hey, Roman numeral seven, bae, drop it like it's hot
+If this world was mine, I'd take your dreams and make 'em multiply
+If this world was mine, I'd take your enemies in front of God
+Introduce 'em to that light, hit them strictly with that fire
+It's a vibe, do your dance, let 'em watch
+She a fan, he a flop, they just wanna kumbaya, nah
+This world, concrete flowers grow
+Heartache, she only doin' what she know
+Weekends, get it poppin' on the low
+Better days comin' for sure (if this world were)
+If it was up to me
+I wouldn't give these nobodies no sympathy
+I'd take away the pain, I'd give you everythin'
+I just wanna see you win, wanna see-
+(If this world were mine)
+It go in (when you), out (ride it), do it real slow (slide)
+Baby, you a star, strike, pose
+When I'm (when you) with you (with me), everythin' goes (slow)
+Come and (put that) put that (on my) on my (titi), soul (soul)
+'Rari (red), crown (stack), wrist (stay), froze (really)
+Drip (tell me), pound (if you), on the way home (love me)
+In this world, concrete flowers grow
+Heartache, she only doin' what she know
+Weekends, get it poppin' on the low
+Better days comin' for sure (if this world were)
+If it was up to me
+I wouldn't give these nobodies no sympathy
+I'd take away the pain, I'd give you everythin'
+I just wanna see you win, wanna see-
+(If this world were mine)
+I can't lie, I trust you, I love you, I won't waste your time
+I turn it off just so I can turn you on
+I'ma make you say it loud
+I'm not even trippin', I won't stress you out
+I might even settle down for you, I'ma show you I'm a pro
+I'ma take my time and turn it off, just so I can turn you on, baby
+Weekends, get it poppin' on the low
+Better days coming for sure (I know you're comin', I know you're comin' for-)
+(Better days)
+(If this world were mine)`;
+    const line = document.getElementById("line");
+
+    let typedIndex = 0;
+
+    // Create span for each character
+    lyric.split("").forEach(char => {
+      const span = document.createElement("span");
+      span.textContent = char;
+      span.classList.add("char");
+      line.appendChild(span);
+    });
+
+    function centerChar(index) {
+      const span = line.children[index];
+      if (!span) return;
+
+      const spanBox = span.getBoundingClientRect();
+      const centerX = window.innerWidth / 2;
+      const delta = spanBox.left + spanBox.width / 2 - centerX;
+
+      const currentTransform = line.style.transform || "translateX(0px)";
+      const match = currentTransform.match(/translateX\((-?\d+(?:\.\d+)?)px\)/);
+      const prevOffset = match ? parseFloat(match[1]) : 0;
+      const newOffset = prevOffset - delta;
+
+      line.style.transform = `translateX(${newOffset}px)`;
+    }
+
+    function isPunctuation(char) {
+    return /[.,!?'"“”\-–—:;()]/.test(char);
+    }
+
+    function isIgnoredKey(key) {
+      return [
+        "Shift", "Control", "Alt", "Meta",
+        "CapsLock", "Tab", "Escape", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"
+      ].includes(key);
+    }
+    document.addEventListener("keydown", (e) => {
+      if (isIgnoredKey(e.key)) return;
+      if (typedIndex >= lyric.length) return;
+
+      const input = e.key;
+      let matched = false;
+
+      while (typedIndex < lyric.length && !matched) {
+        const expected = lyric[typedIndex];
+        const span = line.children[typedIndex];
+
+        if (isPunctuation(expected)) {
+          if (input === expected) {
+            span.classList.add("typed");
+            typedIndex++;
+            matched = true;
+          } else {
+            // Skip it and mark it as correct
+            span.classList.add("typed");
+            typedIndex++;
+          }
+        } else {
+          if (input.toLowerCase() === expected.toLowerCase()) {
+            span.classList.add("typed");
+          } else {
+            span.classList.add("wrong");
+          }
+          typedIndex++;
+          matched = true;
+        }
+      }
+
+      centerChar(typedIndex);
+    });
+
+    window.onload = () => {
+      centerChar(0);
+    };
+  </script>
+</body>
+</html>
