@@ -1,0 +1,12 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>XSS Playground</title>
+</head>
+<body>
+  <img alt="Alt text goes here" onerror="console.log('Hello from img XSS!')" src="./foo.png">
+  <a href="javascript:console.log('Hello from link XSS!')">I'm a link</a>
+</body>
+</html>
