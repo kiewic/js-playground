@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Jan–Feb 2027</title>
+<style>
+  html, body {
+    margin: 0;
+    height: 100%;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+
+  .calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: auto repeat(4, 1fr);
+    height: 100vh;
+  }
+
+  .dow {
+    padding: 8px;
+    text-align: center;
+    font-weight: 800;
+    border-bottom: 2px solid #000;
+  }
+
+  .day {
+    border: 1px solid #000;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .date {
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .events {
+    flex: 1;
+    border-top: 1px dashed #aaa;
+  }
+
+  .muted {
+    color: #999;
+  }
+
+  .event {
+    background: #1a73e8;
+    color: #fff;
+    padding: 4px 6px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .event.secondary {
+    background: #188038;
+  }
+
+  .event.warning {
+    background: #d93025;
+  }
+</style>
+</head>
+<body>
+
+<div class="calendar">
+  <!-- Days of week -->
+  <div class="dow">Sun</div>
+  <div class="dow">Mon</div>
+  <div class="dow">Tue</div>
+  <div class="dow">Wed</div>
+  <div class="dow">Thu</div>
+  <div class="dow">Fri</div>
+  <div class="dow">Sat</div>
+
+  <!-- Week 1: Jan 17–23 -->
+  <div class="day"><div class="date">17</div><div class="events"></div></div>
+  <div class="day"><div class="date">18 · MLK</div><div class="events"></div></div>
+  <div class="day"><div class="date">19</div><div class="events"></div></div>
+  <div class="day"><div class="date">20</div><div class="events"></div></div>
+  <div class="day"><div class="date">21</div><div class="events"></div></div>
+  <div class="day">
+    <div class="date">22</div>
+    <div class="events">
+      <div class="event">Fly to Melbourne</div>
+    </div>
+  </div>
+  <div class="day">
+    <div class="date">23</div>
+    <div class="events">
+      <div class="event">Fly to Melbourne</div>
+    </div>
+  </div>
+
+  <!-- Week 2: Jan 24–30 -->
+  <div class="day">
+    <div class="date">24</div>
+    <div class="events">
+      <div class="event secondary">Melbourne day 1</div>
+    </div>
+  </div>
+  <div class="day">
+    <div class="date">25</div>
+    <div class="events">
+      <div class="event secondary">Melbourne day 2</div>
+    </div>
+  </div>
+  <div class="day">
+    <div class="date">26</div>
+    <div class="events">
+      <div class="event secondary">Melbourne day 3</div>
+    </div>
+  </div>
+  <div class="day">
+    <div class="date">27</div>
+    <div class="events">
+      <div class="event">Fly to Sydney</div>
+    </div>
+  </div>
+  <div class="day">
+    <div class="date">28</div>
+    <div class="events">
+      <div class="event secondary">Sydney day 1</div>
+    </div>
+  </div>
+  <div class="day">
+    <div class="date">29</div>
+    <div class="events">
+      <div class="event secondary">Sydney day 2</div>
+    </div>
+  </div>
+  <div class="day">
+    <div class="date">30</div>
+    <div class="events">
+      <div class="event secondary">Sydney day 3</div>
+    </div>
+  </div>
+
+  <!-- Week 3: Jan 31–Feb 6 -->
+  <div class="day">
+    <div class="date">31</div>
+    <div class="events">
+      <div class="event">Fly to Singapore</div>
+    </div>
+  </div>
+  <div class="day">
+    <div class="date">Feb 1</div>
+    <div class="events">
+      <div class="event secondary">Singapore day 1</div>
+    </div>
+  </div>
+  <div class="day">
+    <div class="date">2</div>
+    <div class="events">
+      <div class="event secondary">Singapore day 2</div>
+    </div>
+  </div>
+  <div class="day">
+    <div class="date">3</div>
+    <div class="events">
+      <div class="event">Fly to KL</div>
+    </div>
+  </div>
+  <div class="day">
+    <div class="date">4</div>
+    <div class="events">
+      <div class="event secondary">KL day 1</div>
+    </div>
+  </div>
+  <div class="day">
+    <div class="date">5</div>
+    <div class="events">
+      <div class="event secondary">KL day 2</div>
+    </div>
+  </div>
+  <div class="day">
+    <div class="date">6 · CNY</div>
+    <div class="events">
+      <div class="event secondary">KL day 3</div>
+    </div>
+  </div>
+
+  <!-- Week 4: Feb 7–13 -->
+  <div class="day">
+    <div class="date">7</div>
+    <div class="events">
+      <div class="event">Fly to Seattle</div>
+    </div>
+  </div>
+  <div class="day"><div class="date">8</div><div class="events"></div></div>
+  <div class="day"><div class="date">9</div><div class="events"></div></div>
+  <div class="day"><div class="date">10</div><div class="events"></div></div>
+  <div class="day"><div class="date">11</div><div class="events"></div></div>
+  <div class="day"><div class="date">12</div><div class="events"></div></div>
+  <div class="day"><div class="date">13</div><div class="events"></div></div>
+</div>
+
+</body>
+</html>
