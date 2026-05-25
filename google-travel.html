@@ -66,6 +66,12 @@
     .field-table th, .field-table td { padding: 0.4rem 0.6rem; text-align: left; border-bottom: 1px solid #0f3460; }
     .field-table th { color: #00d4ff; }
     .field-table tr.hl { background: #1a3a2a; }
+    .scan-month { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.8rem; border-radius: 8px; margin-bottom: 0.5rem; background: #0a0a23; border: 1px solid #0f3460; transition: border-color 0.2s; cursor: pointer; text-decoration: none; color: inherit; }
+    .scan-month:hover { border-color: #00d4ff; }
+    .scan-month .mo-name { font-weight: bold; color: #00d4ff; min-width: 90px; }
+    .scan-month .mo-link { color: #888; font-size: 0.75rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+    .scan-month .mo-open { background: #0f3460; color: #e0e0e0; border: none; border-radius: 6px; padding: 0.3rem 0.7rem; font-size: 0.8rem; cursor: pointer; white-space: nowrap; }
+    .scan-month .mo-open:hover { background: #1a4a7a; }
     .tabs { display: flex; gap: 0; margin-bottom: 1rem; border-bottom: 2px solid #0f3460; }
     .tab { padding: 0.6rem 1.2rem; cursor: pointer; color: #888; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
     .tab:hover { color: #e0e0e0; }
@@ -144,7 +150,7 @@
       <div class="section-label"><span class="icon">📅</span> Travel Month</div>
       <p class="help-text">The month filter is stored in field 16.1 as a 0-indexed value (0=Jan, 11=Dec, -1=any/flexible).</p>
       <div class="month-grid" id="monthGrid">
-        <button class="btn-secondary" onclick="setMonth(-1)">Any month</button>
+        <button class="btn-secondary" onclick="setMonth(-1)">Next 6 months</button>
         <button class="btn-secondary" onclick="setMonth(0)">January</button>
         <button class="btn-secondary" onclick="setMonth(1)">February</button>
         <button class="btn-secondary" onclick="setMonth(2)">March</button>
@@ -179,6 +185,7 @@
 
       <div class="btn-row" style="margin-top: 1.5rem;">
         <button class="btn-primary" onclick="encodeUrl()">🔧 Generate New URL</button>
+        <button class="btn-primary" style="background:#9b59b6;" onclick="scanAllMonths()">📊 Scan All 12 Months</button>
       </div>
     </div>
 
@@ -192,6 +199,16 @@
         <button class="btn-open" onclick="openUrl()">🌐 Open in New Tab</button>
       </div>
       <div id="outputStatus" class="status"></div>
+    </div>
+
+    <!-- Scan All Months -->
+    <div class="card" id="scanCard" style="display:none;">
+      <h2>📊 All 12 Months — Quick Links</h2>
+      <p class="help-text" style="margin-bottom:1rem;">Click any month to open it in a new tab. Open several to compare prices across the year.</p>
+      <div id="scanResults"></div>
+      <div class="btn-row" style="margin-top:1rem;">
+        <button class="btn-open" onclick="openAllMonths()">🌐 Open All 12 in New Tabs</button>
+      </div>
     </div>
   </div>
 
@@ -208,17 +225,24 @@
     }
 
     // ===================== Protobuf =====================
+    // Read varint as raw bytes (handles any size including 64-bit)
     function rv(buf, off) {
-      let r = 0, s = 0;
+      const start = off;
       while (off < buf.length) {
-        const b = buf[off++]; r |= (b & 0x7f) << s;
-        if (!(b & 0x80)) return { v: r, off }; s += 7;
-        if (s > 35) throw new Error('Varint overflow');
+        if (!(buf[off++] & 0x80)) {
+          const raw = buf.slice(start, off);
+          // Decode to number (safe for values up to 32 bits; larger values stored as raw)
+          let r = 0, s = 0;
+          for (let i = 0; i < raw.length && s < 28; i++) {
+            r |= (raw[i] & 0x7f) << s; s += 7;
+          }
+          return { v: r, off, raw: raw };
+        }
+        if (off - start > 10) throw new Error('Varint too long');
       }
       throw new Error('Truncated');
     }
     function wv(val) {
-      // Handle signed values (like -1) by treating as unsigned 32-bit
       if (val < 0) val = (val >>> 0);
       const o = [];
       if (val === 0) return [0];
@@ -230,13 +254,13 @@
       while (off < buf.length) {
         const t = rv(buf, off); off = t.off;
         const fn = t.v >>> 3, wt = t.v & 7;
-        let val;
-        if (wt === 0) { const v = rv(buf, off); val = v.v; off = v.off; }
+        let val, rawVarint;
+        if (wt === 0) { const v = rv(buf, off); val = v.v; rawVarint = v.raw; off = v.off; }
         else if (wt === 1) { val = buf.slice(off, off + 8); off += 8; }
         else if (wt === 2) { const l = rv(buf, off); off = l.off; val = buf.slice(off, off + l.v); off += l.v; }
         else if (wt === 5) { val = buf.slice(off, off + 4); off += 4; }
         else throw new Error(`Wire type ${wt}`);
-        f.push({ fn, wt, val });
+        f.push({ fn, wt, val, rawVarint });
       }
       return f;
     }
@@ -244,7 +268,11 @@
       const o = [];
       for (const f of fields) {
         o.push(...wv((f.fn << 3) | f.wt));
-        if (f.wt === 0) o.push(...wv(f.val));
+        if (f.wt === 0) {
+          // Use raw bytes if available and >4 bytes (64-bit varint that can't round-trip via Number)
+          if (f.rawVarint && f.rawVarint.length > 4) o.push(...f.rawVarint);
+          else o.push(...wv(f.val));
+        }
         else if (f.wt === 2) { o.push(...wv(f.val.length)); o.push(...f.val); }
         else if (f.wt === 1 || f.wt === 5) o.push(...f.val);
       }
@@ -272,26 +300,32 @@
     }
 
     // ===================== Month from field 16 =====================
+    // The -1 sentinel for "any month" is encoded as a 10-byte varint (0xFFFFFFFFFFFFFFFF).
+    // We detect it by checking rawVarint length.
+    const ANY_MONTH_VARINT = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x01];
+
     function getMonthFromField16(field16bytes) {
       try {
         const sub = parse(field16bytes);
         const f1 = sub.find(f => f.fn === 1 && f.wt === 0);
         if (!f1) return null;
-        // Decode as signed: if high bit is set, it's negative
-        let val = f1.val;
-        if (val > 0x7FFFFFFF) val = val - 0x100000000;
-        return val;
+        // If rawVarint is 10 bytes (64-bit -1), it means "any month"
+        if (f1.rawVarint && f1.rawVarint.length >= 10) return -1;
+        return f1.val;
       } catch { return null; }
     }
 
     function setMonthInField16(field16bytes, newMonth) {
       const sub = parse(field16bytes);
       const f1 = sub.find(f => f.fn === 1 && f.wt === 0);
-      if (f1) {
-        f1.val = newMonth < 0 ? (newMonth >>> 0) : newMonth;
+      if (newMonth === -1) {
+        // "Any month" = 64-bit -1 varint
+        const entry = { fn: 1, wt: 0, val: -1, rawVarint: new Uint8Array(ANY_MONTH_VARINT) };
+        if (f1) { Object.assign(f1, entry); } else { sub.unshift(entry); }
       } else {
-        // Add sub-field 1
-        sub.unshift({ fn: 1, wt: 0, val: newMonth < 0 ? (newMonth >>> 0) : newMonth });
+        // Specific month: clear rawVarint so serialize uses the new small value
+        const entry = { fn: 1, wt: 0, val: newMonth, rawVarint: null };
+        if (f1) { Object.assign(f1, entry); } else { sub.unshift(entry); }
       }
       return serialize(sub);
     }
@@ -308,7 +342,7 @@
 
     function monthLabel(v) {
       if (v === null || v === undefined) return 'Unknown';
-      if (v === -1 || v > 11) return 'Any (flexible)';
+      if (v === -1 || v > 11) return 'Next 6 months';
       return MONTHS[v] || `Index ${v}`;
     }
 
@@ -319,7 +353,7 @@
 
     function setMonth(v) {
       selectedMonth = v;
-      document.getElementById('selectedMonthLabel').textContent = v === -1 ? 'Any (flexible)' : MONTHS[v];
+      document.getElementById('selectedMonthLabel').textContent = v === -1 ? 'Next 6 months' : MONTHS[v];
       // Highlight active button
       document.querySelectorAll('#monthGrid button').forEach((btn, i) => {
         const btnVal = i === 0 ? -1 : i - 1;
@@ -485,6 +519,77 @@
         .catch(() => { const t = document.createElement('textarea'); t.value = url; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); showStatus('outputStatus', 'success', 'Copied!'); });
     }
     function openUrl() { window.open(document.getElementById('outputUrl').textContent, '_blank'); }
+
+    // ===================== Scan All 12 Months =====================
+    let scanUrls = [];
+
+    function generateUrlForMonth(monthIdx) {
+      // Apply current price settings
+      const removePrice = document.getElementById('removePrice').checked;
+      const newPrice = removePrice ? null : parseInt(document.getElementById('newPrice').value, 10);
+
+      // Replace dates
+      const newDepart = document.getElementById('departDate').value;
+      const newReturn = document.getElementById('returnDate').value;
+      let bytes = new Uint8Array(currentBytes);
+      if (origDepart && newDepart && newDepart !== origDepart) bytes = replaceDateBytes(bytes, origDepart, newDepart).result;
+      if (origReturn && newReturn && newReturn !== origReturn) bytes = replaceDateBytes(bytes, origReturn, newReturn).result;
+
+      // Parse and modify fields
+      const fields = parse(bytes);
+      const oldPriceF = parse(currentBytes).find(f => f.fn === 12 && f.wt === 0);
+      const newFields = [];
+      for (const f of fields) {
+        if (f.fn === 12 && f.wt === 0) {
+          if (removePrice) continue;
+          newFields.push({ fn: 12, wt: 0, val: newPrice }); continue;
+        }
+        if (f.fn === 16 && f.wt === 2) {
+          newFields.push({ fn: 16, wt: 2, val: setMonthInField16(f.val, monthIdx) }); continue;
+        }
+        newFields.push(f);
+      }
+      if (!oldPriceF && !removePrice) newFields.push({ fn: 12, wt: 0, val: newPrice });
+
+      const finalBytes = serialize(newFields);
+      const url = new URL(document.getElementById('inputUrl').value.trim());
+      url.searchParams.set('tfs', b64e(finalBytes));
+      return url.href;
+    }
+
+    function scanAllMonths() {
+      if (!currentBytes) { showStatus('decodeStatus', 'error', 'Decode a URL first.'); return; }
+
+      scanUrls = [];
+      const container = document.getElementById('scanResults');
+      let html = '';
+
+      for (let m = 0; m < 12; m++) {
+        try {
+          const url = generateUrlForMonth(m);
+          scanUrls.push({ month: m, url });
+          html += `<a class="scan-month" href="${url}" target="_blank" onclick="event.preventDefault(); window.open(this.href, '_blank');">
+            <span class="mo-name">${MONTHS[m]}</span>
+            <span class="mo-link">${url.substring(0, 80)}…</span>
+            <button class="mo-open" onclick="event.stopPropagation(); window.open('${url}', '_blank');">Open ↗</button>
+          </a>`;
+        } catch (e) {
+          html += `<div class="scan-month"><span class="mo-name">${MONTHS[m]}</span><span style="color:#e74c3c;">Error: ${e.message}</span></div>`;
+        }
+      }
+
+      container.innerHTML = html;
+      document.getElementById('scanCard').style.display = '';
+      showStatus('decodeStatus', 'success', 'Generated URLs for all 12 months!');
+    }
+
+    function openAllMonths() {
+      if (!scanUrls.length) return;
+      // Open with slight delays to avoid popup blockers
+      scanUrls.forEach((item, i) => {
+        setTimeout(() => window.open(item.url, '_blank'), i * 300);
+      });
+    }
   </script>
 </body>
 </html>
