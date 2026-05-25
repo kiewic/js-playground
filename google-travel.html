@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Travel URL Tool</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a1a2e; color: #e0e0e0; min-height: 100vh; padding: 2rem; }
+    .container { max-width: 860px; margin: 0 auto; }
+    h1 { text-align: center; margin-bottom: 0.5rem; color: #00d4ff; font-size: 1.8rem; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 2rem; font-size: 0.9rem; }
+    .card { background: #16213e; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid #0f3460; }
+    .card h2 { color: #00d4ff; margin-bottom: 1rem; font-size: 1.1rem; }
+    label { display: block; margin-bottom: 0.4rem; font-weight: 600; color: #aaa; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    textarea, input[type="number"], input[type="text"], input[type="date"], select {
+      width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid #0f3460;
+      background: #0a0a23; color: #e0e0e0; font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.9rem; transition: border-color 0.2s;
+    }
+    textarea { resize: vertical; min-height: 80px; }
+    select { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; cursor: pointer; }
+    input[type="date"] { cursor: pointer; }
+    input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.8); }
+    textarea:focus, input:focus, select:focus { outline: none; border-color: #00d4ff; }
+    .row-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.75rem; }
+    .row-3col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 0.75rem; }
+    .price-input-wrap { position: relative; }
+    .price-input-wrap::before { content: '$'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #00d4ff; font-weight: bold; font-size: 1.1rem; }
+    .price-input-wrap input { padding-left: 1.5rem; font-size: 1.2rem; font-weight: bold; }
+    button { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: all 0.2s; }
+    .btn-primary { background: #00d4ff; color: #0a0a23; }
+    .btn-primary:hover { background: #00b8d9; transform: translateY(-1px); }
+    .btn-secondary { background: #0f3460; color: #e0e0e0; }
+    .btn-secondary:hover { background: #1a4a7a; }
+    .btn-secondary.active { background: #00d4ff; color: #0a0a23; }
+    .btn-copy { background: #2ecc71; color: #0a0a23; }
+    .btn-copy:hover { background: #27ae60; }
+    .btn-open { background: #e67e22; color: #fff; }
+    .btn-open:hover { background: #d35400; }
+    .btn-row { display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap; }
+    .status { margin-top: 1rem; padding: 0.75rem; border-radius: 8px; font-size: 0.9rem; display: none; }
+    .status.success { display: block; background: #0d3320; border: 1px solid #2ecc71; color: #2ecc71; }
+    .status.error { display: block; background: #3d1111; border: 1px solid #e74c3c; color: #e74c3c; }
+    .decoded-info { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.75rem; }
+    .decoded-info .item { background: #0a0a23; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.85rem; }
+    .decoded-info .item span { color: #00d4ff; font-weight: bold; }
+    .output-url { word-break: break-all; background: #0a0a23; padding: 0.75rem; border-radius: 8px; border: 1px solid #2ecc71; margin-top: 0.75rem; font-family: monospace; font-size: 0.85rem; color: #2ecc71; user-select: all; }
+    .arrow { text-align: center; font-size: 1.5rem; color: #0f3460; margin: 0.5rem 0; }
+    .quick-btns { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
+    .quick-btns button { padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 20px; }
+    .section-label { color: #ff9f43; font-size: 0.9rem; font-weight: 600; margin-top: 1.2rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+    .section-label .icon { font-size: 1.1rem; }
+    .help-text { color: #666; font-size: 0.8rem; margin-top: 0.3rem; font-style: italic; }
+    .checkbox-row { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
+    .checkbox-row input[type="checkbox"] { width: auto; accent-color: #00d4ff; }
+    .checkbox-row label { margin: 0; text-transform: none; font-size: 0.85rem; }
+    .trip-duration { background: #0a0a23; border: 1px solid #0f3460; border-radius: 8px; padding: 0.6rem 0.8rem; margin-top: 0.5rem; font-size: 0.85rem; color: #aaa; }
+    .trip-duration span { color: #00d4ff; font-weight: bold; }
+    .month-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-top: 0.5rem; }
+    .month-grid button { padding: 0.6rem; font-size: 0.85rem; border-radius: 8px; }
+    details { margin-top: 0.75rem; }
+    summary { cursor: pointer; color: #888; font-size: 0.85rem; }
+    summary:hover { color: #00d4ff; }
+    .field-table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; font-size: 0.8rem; }
+    .field-table th, .field-table td { padding: 0.4rem 0.6rem; text-align: left; border-bottom: 1px solid #0f3460; }
+    .field-table th { color: #00d4ff; }
+    .field-table tr.hl { background: #1a3a2a; }
+    .tabs { display: flex; gap: 0; margin-bottom: 1rem; border-bottom: 2px solid #0f3460; }
+    .tab { padding: 0.6rem 1.2rem; cursor: pointer; color: #888; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+    .tab:hover { color: #e0e0e0; }
+    .tab.active { color: #00d4ff; border-bottom-color: #00d4ff; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>✈️ Google Travel URL Tool</h1>
+    <p class="subtitle">Modify price, dates, and month in Google Travel Explore URLs</p>
+
+    <!-- Step 1: Input -->
+    <div class="card">
+      <h2>1. Paste Google Travel URL</h2>
+      <label for="inputUrl">URL</label>
+      <textarea id="inputUrl" placeholder="https://www.google.com/travel/explore?tfs=..."></textarea>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="decodeUrl()">🔍 Decode URL</button>
+        <button class="btn-secondary" onclick="pasteFromClipboard()">📋 Paste from Clipboard</button>
+      </div>
+      <div id="decodeStatus" class="status"></div>
+    </div>
+
+    <!-- Step 2: Decoded + Modify -->
+    <div class="card" id="modifyCard" style="display:none;">
+      <h2>2. Decoded Filters</h2>
+      <div class="decoded-info" id="decodedInfo"></div>
+
+      <details>
+        <summary>Show raw protobuf fields</summary>
+        <table class="field-table" id="fieldTable">
+          <thead><tr><th>Field</th><th>Wire</th><th>Value</th><th>Meaning</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </details>
+
+      <div class="arrow">↓</div>
+
+      <h2>3. Modify</h2>
+
+      <!-- Price -->
+      <div class="section-label"><span class="icon">💰</span> Price Limit</div>
+      <div class="row-2col">
+        <div>
+          <label for="newPrice">Maximum Price (USD)</label>
+          <div class="price-input-wrap">
+            <input type="number" id="newPrice" min="50" max="50000" step="50" value="2000">
+          </div>
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <div class="checkbox-row">
+            <input type="checkbox" id="removePrice">
+            <label for="removePrice">Remove price filter entirely</label>
+          </div>
+        </div>
+      </div>
+      <div class="quick-btns">
+        <label style="width:100%">Quick select:</label>
+        <button class="btn-secondary" onclick="setPrice(1000)">$1,000</button>
+        <button class="btn-secondary" onclick="setPrice(1200)">$1,200</button>
+        <button class="btn-secondary" onclick="setPrice(1400)">$1,400</button>
+        <button class="btn-secondary" onclick="setPrice(1600)">$1,600</button>
+        <button class="btn-secondary" onclick="setPrice(1800)">$1,800</button>
+        <button class="btn-secondary" onclick="setPrice(2000)">$2,000</button>
+        <button class="btn-secondary" onclick="setPrice(2200)">$2,200</button>
+        <button class="btn-secondary" onclick="setPrice(2400)">$2,400</button>
+        <button class="btn-secondary" onclick="setPrice(2600)">$2,600</button>
+        <button class="btn-secondary" onclick="setPrice(2800)">$2,800</button>
+        <button class="btn-secondary" onclick="setPrice(3000)">$3,000</button>
+      </div>
+
+      <!-- Month / Dates -->
+      <div class="section-label"><span class="icon">📅</span> Travel Month</div>
+      <p class="help-text">The month filter is stored in field 16.1 as a 0-indexed value (0=Jan, 11=Dec, -1=any/flexible).</p>
+      <div class="month-grid" id="monthGrid">
+        <button class="btn-secondary" onclick="setMonth(-1)">Any month</button>
+        <button class="btn-secondary" onclick="setMonth(0)">January</button>
+        <button class="btn-secondary" onclick="setMonth(1)">February</button>
+        <button class="btn-secondary" onclick="setMonth(2)">March</button>
+        <button class="btn-secondary" onclick="setMonth(3)">April</button>
+        <button class="btn-secondary" onclick="setMonth(4)">May</button>
+        <button class="btn-secondary" onclick="setMonth(5)">June</button>
+        <button class="btn-secondary" onclick="setMonth(6)">July</button>
+        <button class="btn-secondary" onclick="setMonth(7)">August</button>
+        <button class="btn-secondary" onclick="setMonth(8)">September</button>
+        <button class="btn-secondary" onclick="setMonth(9)">October</button>
+        <button class="btn-secondary" onclick="setMonth(10)">November</button>
+        <button class="btn-secondary" onclick="setMonth(11)">December</button>
+      </div>
+      <div style="margin-top:0.5rem;">
+        <label>Selected: <span id="selectedMonthLabel" style="color:#00d4ff; font-weight:bold;">—</span></label>
+      </div>
+
+      <!-- Trip Dates -->
+      <div class="section-label"><span class="icon">🗓️</span> Trip Dates (embedded in URL)</div>
+      <p class="help-text">These dates are inside the protobuf. Google may override them when a month filter is active.</p>
+      <div class="row-2col">
+        <div>
+          <label for="departDate">🛫 Departure</label>
+          <input type="date" id="departDate">
+        </div>
+        <div>
+          <label for="returnDate">🛬 Return</label>
+          <input type="date" id="returnDate">
+        </div>
+      </div>
+      <div class="trip-duration" id="tripDuration"></div>
+
+      <div class="btn-row" style="margin-top: 1.5rem;">
+        <button class="btn-primary" onclick="encodeUrl()">🔧 Generate New URL</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Output -->
+    <div class="card" id="outputCard" style="display:none;">
+      <h2>4. Updated URL</h2>
+      <div id="changeSummary" style="margin-bottom: 0.75rem; font-size: 0.85rem; color: #aaa;"></div>
+      <div class="output-url" id="outputUrl"></div>
+      <div class="btn-row">
+        <button class="btn-copy" onclick="copyUrl()">📋 Copy URL</button>
+        <button class="btn-open" onclick="openUrl()">🌐 Open in New Tab</button>
+      </div>
+      <div id="outputStatus" class="status"></div>
+    </div>
+  </div>
+
+  <script>
+    // ===================== Base64url =====================
+    function b64d(s) {
+      s = s.replace(/-/g, '+').replace(/_/g, '/');
+      while (s.length % 4) s += '=';
+      return new Uint8Array([...atob(s)].map(c => c.charCodeAt(0)));
+    }
+    function b64e(b) {
+      let s = ''; for (const x of b) s += String.fromCharCode(x);
+      return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
+
+    // ===================== Protobuf =====================
+    function rv(buf, off) {
+      let r = 0, s = 0;
+      while (off < buf.length) {
+        const b = buf[off++]; r |= (b & 0x7f) << s;
+        if (!(b & 0x80)) return { v: r, off }; s += 7;
+        if (s > 35) throw new Error('Varint overflow');
+      }
+      throw new Error('Truncated');
+    }
+    function wv(val) {
+      // Handle signed values (like -1) by treating as unsigned 32-bit
+      if (val < 0) val = (val >>> 0);
+      const o = [];
+      if (val === 0) return [0];
+      while (val > 0) { let b = val & 0x7f; val >>>= 7; if (val) b |= 0x80; o.push(b); }
+      return o;
+    }
+    function parse(buf) {
+      const f = []; let off = 0;
+      while (off < buf.length) {
+        const t = rv(buf, off); off = t.off;
+        const fn = t.v >>> 3, wt = t.v & 7;
+        let val;
+        if (wt === 0) { const v = rv(buf, off); val = v.v; off = v.off; }
+        else if (wt === 1) { val = buf.slice(off, off + 8); off += 8; }
+        else if (wt === 2) { const l = rv(buf, off); off = l.off; val = buf.slice(off, off + l.v); off += l.v; }
+        else if (wt === 5) { val = buf.slice(off, off + 4); off += 4; }
+        else throw new Error(`Wire type ${wt}`);
+        f.push({ fn, wt, val });
+      }
+      return f;
+    }
+    function serialize(fields) {
+      const o = [];
+      for (const f of fields) {
+        o.push(...wv((f.fn << 3) | f.wt));
+        if (f.wt === 0) o.push(...wv(f.val));
+        else if (f.wt === 2) { o.push(...wv(f.val.length)); o.push(...f.val); }
+        else if (f.wt === 1 || f.wt === 5) o.push(...f.val);
+      }
+      return new Uint8Array(o);
+    }
+
+    // ===================== Date binary replace =====================
+    function replaceDateBytes(buf, oldDate, newDate) {
+      const oldB = new TextEncoder().encode(oldDate);
+      const newB = new TextEncoder().encode(newDate);
+      if (oldB.length !== 10 || newB.length !== 10) throw new Error('Dates must be YYYY-MM-DD');
+      const result = new Uint8Array(buf);
+      let count = 0;
+      for (let i = 0; i <= result.length - 10; i++) {
+        let match = true;
+        for (let j = 0; j < 10; j++) { if (result[i + j] !== oldB[j]) { match = false; break; } }
+        if (match) { for (let j = 0; j < 10; j++) result[i + j] = newB[j]; count++; }
+      }
+      return { result, count };
+    }
+
+    function extractDates(buf) {
+      const t = new TextDecoder().decode(buf);
+      return [...t.matchAll(/\d{4}-\d{2}-\d{2}/g)].map(m => m[0]);
+    }
+
+    // ===================== Month from field 16 =====================
+    function getMonthFromField16(field16bytes) {
+      try {
+        const sub = parse(field16bytes);
+        const f1 = sub.find(f => f.fn === 1 && f.wt === 0);
+        if (!f1) return null;
+        // Decode as signed: if high bit is set, it's negative
+        let val = f1.val;
+        if (val > 0x7FFFFFFF) val = val - 0x100000000;
+        return val;
+      } catch { return null; }
+    }
+
+    function setMonthInField16(field16bytes, newMonth) {
+      const sub = parse(field16bytes);
+      const f1 = sub.find(f => f.fn === 1 && f.wt === 0);
+      if (f1) {
+        f1.val = newMonth < 0 ? (newMonth >>> 0) : newMonth;
+      } else {
+        // Add sub-field 1
+        sub.unshift({ fn: 1, wt: 0, val: newMonth < 0 ? (newMonth >>> 0) : newMonth });
+      }
+      return serialize(sub);
+    }
+
+    // ===================== State =====================
+    let currentBytes = null;
+    let origDepart = '', origReturn = '';
+    let origMonth = null;
+    let selectedMonth = null;
+
+    const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const WIRE_NAMES = ['Varint','64-bit','LenDelim','StartGrp','EndGrp','32-bit'];
+    const FIELD_INFO = { 1:'Config', 2:'Trip type', 3:'Trip leg', 8:'Round trip', 9:'Stops', 12:'Price ($)', 14:'Travel mode', 16:'Month + config', 17:'Adults', 19:'Sort', 22:'Display' };
+
+    function monthLabel(v) {
+      if (v === null || v === undefined) return 'Unknown';
+      if (v === -1 || v > 11) return 'Any (flexible)';
+      return MONTHS[v] || `Index ${v}`;
+    }
+
+    // ===================== UI =====================
+    function showStatus(id, type, msg) { const el = document.getElementById(id); el.className = `status ${type}`; el.textContent = msg; }
+    function setPrice(v) { document.getElementById('newPrice').value = v; document.getElementById('removePrice').checked = false; document.getElementById('newPrice').disabled = false; }
+    document.getElementById('removePrice').addEventListener('change', function() { document.getElementById('newPrice').disabled = this.checked; });
+
+    function setMonth(v) {
+      selectedMonth = v;
+      document.getElementById('selectedMonthLabel').textContent = v === -1 ? 'Any (flexible)' : MONTHS[v];
+      // Highlight active button
+      document.querySelectorAll('#monthGrid button').forEach((btn, i) => {
+        const btnVal = i === 0 ? -1 : i - 1;
+        btn.classList.toggle('active', btnVal === v);
+      });
+    }
+
+    function updateDuration() {
+      const d = document.getElementById('departDate').value;
+      const r = document.getElementById('returnDate').value;
+      const el = document.getElementById('tripDuration');
+      if (d && r) {
+        const days = Math.round((new Date(r) - new Date(d)) / 86400000);
+        el.innerHTML = `Trip duration: <span>${days} days</span> (${(days / 7).toFixed(1)} weeks)`;
+      } else el.innerHTML = '';
+    }
+    document.getElementById('departDate').addEventListener('change', updateDuration);
+    document.getElementById('returnDate').addEventListener('change', updateDuration);
+
+    async function pasteFromClipboard() {
+      try { document.getElementById('inputUrl').value = await navigator.clipboard.readText(); decodeUrl(); }
+      catch { showStatus('decodeStatus', 'error', 'Clipboard denied.'); }
+    }
+
+    // ===================== Decode =====================
+    function decodeUrl() {
+      const urlStr = document.getElementById('inputUrl').value.trim();
+      if (!urlStr) { showStatus('decodeStatus', 'error', 'Enter a URL.'); return; }
+      let url;
+      try { url = new URL(urlStr); } catch { showStatus('decodeStatus', 'error', 'Invalid URL.'); return; }
+      const tfs = url.searchParams.get('tfs');
+      if (!tfs) { showStatus('decodeStatus', 'error', 'No "tfs" parameter. Use a Google Travel Explore URL.'); return; }
+
+      try {
+        currentBytes = b64d(tfs);
+        const fields = parse(currentBytes);
+        const priceF = fields.find(f => f.fn === 12 && f.wt === 0);
+        const f16 = fields.find(f => f.fn === 16 && f.wt === 2);
+        const dates = extractDates(currentBytes);
+
+        origDepart = dates[0] || '';
+        origReturn = dates[1] || '';
+        origMonth = f16 ? getMonthFromField16(f16.val) : null;
+
+        const priceLabel = priceF ? `$${priceF.val.toLocaleString()}` : 'Not set';
+
+        document.getElementById('decodedInfo').innerHTML = `
+          <div class="item">💰 Price: <span>${priceLabel}</span></div>
+          <div class="item">📅 Month: <span>${monthLabel(origMonth)}</span></div>
+          <div class="item">🛫 Depart: <span>${origDepart || 'N/A'}</span></div>
+          <div class="item">🛬 Return: <span>${origReturn || 'N/A'}</span></div>
+        `;
+
+        // Field table
+        document.querySelector('#fieldTable tbody').innerHTML = fields.map(f => {
+          let dv;
+          if (f.wt === 0) dv = f.val;
+          else if (f.wt === 2) {
+            const ld = extractDates(f.val);
+            if (ld.length) dv = ld.join(', ');
+            else if (f.fn === 16) {
+              const sub = parse(f.val);
+              dv = sub.map(s => `${s.fn}=${s.val}`).join(', ');
+            }
+            else { try { const t = new TextDecoder().decode(f.val); dv = /^[\x20-\x7e]+$/.test(t) ? `"${t.slice(0,50)}"` : `bytes[${f.val.length}]`; } catch { dv = `bytes[${f.val.length}]`; } }
+          } else dv = `bytes[${f.val?.length||'?'}]`;
+          const hl = (f.fn === 12 || f.fn === 16) ? 'hl' : '';
+          return `<tr class="${hl}"><td>${f.fn}</td><td>${WIRE_NAMES[f.wt]}</td><td>${dv}</td><td style="color:#888">${FIELD_INFO[f.fn]||''}</td></tr>`;
+        }).join('');
+
+        // Set controls
+        if (priceF) { document.getElementById('newPrice').value = priceF.val; document.getElementById('removePrice').checked = false; document.getElementById('newPrice').disabled = false; }
+        else { document.getElementById('removePrice').checked = true; document.getElementById('newPrice').disabled = true; }
+
+        if (origMonth !== null) setMonth(origMonth); else setMonth(-1);
+        if (origDepart) document.getElementById('departDate').value = origDepart;
+        if (origReturn) document.getElementById('returnDate').value = origReturn;
+        updateDuration();
+
+        document.getElementById('modifyCard').style.display = '';
+        showStatus('decodeStatus', 'success', `Decoded! Price: ${priceLabel} · Month: ${monthLabel(origMonth)} · Dates: ${origDepart} → ${origReturn}`);
+      } catch (e) {
+        showStatus('decodeStatus', 'error', `Decode error: ${e.message}`);
+      }
+    }
+
+    // ===================== Encode =====================
+    function encodeUrl() {
+      const removePrice = document.getElementById('removePrice').checked;
+      const newPrice = removePrice ? null : parseInt(document.getElementById('newPrice').value, 10);
+      if (!removePrice && (isNaN(newPrice) || newPrice < 1)) { showStatus('decodeStatus', 'error', 'Enter a valid price.'); return; }
+
+      const newDepart = document.getElementById('departDate').value;
+      const newReturn = document.getElementById('returnDate').value;
+      if (newDepart && newReturn && newReturn <= newDepart) { showStatus('decodeStatus', 'error', 'Return must be after departure.'); return; }
+
+      try {
+        // 1. Replace dates in raw bytes (same-length binary swap)
+        let bytes = new Uint8Array(currentBytes);
+        if (origDepart && newDepart && newDepart !== origDepart) {
+          bytes = replaceDateBytes(bytes, origDepart, newDepart).result;
+        }
+        if (origReturn && newReturn && newReturn !== origReturn) {
+          bytes = replaceDateBytes(bytes, origReturn, newReturn).result;
+        }
+
+        // 2. Parse fields and modify price + month
+        const fields = parse(bytes);
+        const oldPriceF = parse(currentBytes).find(f => f.fn === 12 && f.wt === 0);
+        const changes = [];
+        const newFields = [];
+
+        for (const f of fields) {
+          // Price
+          if (f.fn === 12 && f.wt === 0) {
+            if (removePrice) continue;
+            newFields.push({ fn: 12, wt: 0, val: newPrice });
+            continue;
+          }
+          // Month (field 16)
+          if (f.fn === 16 && f.wt === 2 && selectedMonth !== null) {
+            const newF16 = setMonthInField16(f.val, selectedMonth);
+            newFields.push({ fn: 16, wt: 2, val: newF16 });
+            continue;
+          }
+          newFields.push(f);
+        }
+
+        // Add price if didn't exist
+        if (!oldPriceF && !removePrice) {
+          newFields.push({ fn: 12, wt: 0, val: newPrice });
+        }
+
+        const finalBytes = serialize(newFields);
+        const newTfs = b64e(finalBytes);
+        const url = new URL(document.getElementById('inputUrl').value.trim());
+        url.searchParams.set('tfs', newTfs);
+
+        document.getElementById('outputUrl').textContent = url.href;
+        document.getElementById('outputCard').style.display = '';
+
+        // Summary
+        const oldP = oldPriceF ? `$${oldPriceF.val.toLocaleString()}` : '(none)';
+        const newP = removePrice ? '(removed)' : `$${newPrice.toLocaleString()}`;
+        if (oldP !== newP) changes.push(`💰 Price: ${oldP} → ${newP}`);
+        if (selectedMonth !== origMonth) changes.push(`📅 Month: ${monthLabel(origMonth)} → ${monthLabel(selectedMonth)}`);
+        if (newDepart && newDepart !== origDepart) changes.push(`🛫 Depart: ${origDepart} → ${newDepart}`);
+        if (newReturn && newReturn !== origReturn) changes.push(`🛬 Return: ${origReturn} → ${newReturn}`);
+
+        document.getElementById('changeSummary').innerHTML = changes.length
+          ? changes.map(c => `✅ ${c}`).join('<br>') : '⚠️ No changes';
+        showStatus('decodeStatus', 'success', changes.length ? changes.join(' · ') : 'No changes.');
+      } catch (e) {
+        showStatus('decodeStatus', 'error', `Encode error: ${e.message}`);
+      }
+    }
+
+    // ===================== Clipboard / Open =====================
+    function copyUrl() {
+      const url = document.getElementById('outputUrl').textContent;
+      navigator.clipboard.writeText(url)
+        .then(() => showStatus('outputStatus', 'success', 'Copied!'))
+        .catch(() => { const t = document.createElement('textarea'); t.value = url; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); showStatus('outputStatus', 'success', 'Copied!'); });
+    }
+    function openUrl() { window.open(document.getElementById('outputUrl').textContent, '_blank'); }
+  </script>
+</body>
+</html>
